@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/ui/input";
 import {
   signUpSchema,
   type SignUpFormValues,
@@ -90,48 +92,60 @@ export function SignUpScreen() {
               </h1>
 
               <div className="flex flex-col gap-4">
-                <SignUpTextField
+                <InputField
                   id="fullName"
+                  name="fullName"
                   label="Full Name"
                   type="text"
-                  iconSrc="/icons/auth-sms.svg"
+                  leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
                   placeholder="Enter your full name"
                   value={values.fullName}
                   error={errors.fullName}
-                  onChange={(value) => updateValue("fullName", value)}
+                  onChange={(event) =>
+                    updateValue("fullName", event.currentTarget.value)
+                  }
                 />
 
-                <SignUpTextField
+                <InputField
                   id="email"
+                  name="email"
                   label="Email"
                   type="email"
-                  iconSrc="/icons/auth-sms.svg"
+                  leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
                   placeholder="Enter your email"
                   value={values.email}
                   error={errors.email}
-                  onChange={(value) => updateValue("email", value)}
+                  onChange={(event) =>
+                    updateValue("email", event.currentTarget.value)
+                  }
                 />
 
-                <SignUpTextField
+                <InputField
                   id="password"
+                  name="password"
                   label="Create Password"
                   type="password"
-                  iconSrc="/icons/auth-lock.svg"
+                  leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Create Password"
                   value={values.password}
                   error={errors.password}
-                  onChange={(value) => updateValue("password", value)}
+                  onChange={(event) =>
+                    updateValue("password", event.currentTarget.value)
+                  }
                 />
 
-                <SignUpTextField
+                <InputField
                   id="confirmPassword"
+                  name="confirmPassword"
                   label="Confirm Password"
                   type="password"
-                  iconSrc="/icons/auth-lock.svg"
+                  leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Confirm Password"
                   value={values.confirmPassword}
                   error={errors.confirmPassword}
-                  onChange={(value) => updateValue("confirmPassword", value)}
+                  onChange={(event) =>
+                    updateValue("confirmPassword", event.currentTarget.value)
+                  }
                 />
               </div>
 
@@ -146,12 +160,9 @@ export function SignUpScreen() {
                   </Link>
                 </p>
 
-                <button
-                  type="submit"
-                  className="flex h-14 w-full items-center justify-center rounded-xl bg-[#003dae] px-6 py-4 text-base font-semibold leading-6 text-white transition-colors hover:bg-[#00349a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
-                >
+                <Button type="submit" fullWidth>
                   Sign Up
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -199,6 +210,10 @@ export function SignUpScreen() {
   );
 }
 
+function AuthFieldIcon({ src }: { src: string }) {
+  return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
+}
+
 function BackgroundPanel({ className }: { className: string }) {
   return (
     <div className={className} aria-hidden="true">
@@ -215,64 +230,6 @@ function BackgroundPanel({ className }: { className: string }) {
   );
 }
 
-type SignUpTextFieldProps = {
-  id: keyof SignUpFormValues;
-  label: string;
-  type: "email" | "password" | "text";
-  iconSrc: string;
-  placeholder: string;
-  value: string;
-  error?: string;
-  onChange: (value: string) => void;
-};
-
-function SignUpTextField({
-  id,
-  label,
-  type,
-  iconSrc,
-  placeholder,
-  value,
-  error,
-  onChange,
-}: SignUpTextFieldProps) {
-  return (
-    <div className="flex w-full flex-col gap-2">
-      <label
-        htmlFor={id}
-        className="text-base leading-6 text-[#181818] md:font-medium md:text-[#040506]"
-      >
-        {label}
-      </label>
-      <div
-        className={`flex h-[58px] w-full items-center gap-2 border bg-white p-4 md:h-[50px] md:rounded-full md:border-transparent md:px-5 ${
-          error
-            ? "rounded-xl border-red-500 md:border-red-500"
-            : "rounded-xl border-[#cbcbcb] md:border-transparent"
-        }`}
-      >
-        <Image src={iconSrc} alt="" width={24} height={24} aria-hidden="true" />
-        <input
-          id={id}
-          name={id}
-          type={type}
-          value={value}
-          placeholder={placeholder}
-          aria-invalid={Boolean(error)}
-          aria-describedby={error ? `${id}-error` : undefined}
-          onChange={(event) => onChange(event.currentTarget.value)}
-          className="min-w-0 flex-1 bg-transparent text-base leading-6 text-[#181818] outline-none placeholder:text-[#979797] md:text-sm md:font-medium md:leading-[21px] md:text-[#040506] md:placeholder:text-[#6e6e6e]"
-        />
-      </div>
-      {error ? (
-        <p id={`${id}-error`} className="text-sm leading-5 text-red-600">
-          {error}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 type SocialButtonProps = {
   iconSrc: string;
   label: string;
@@ -280,12 +237,13 @@ type SocialButtonProps = {
 
 function SocialButton({ iconSrc, label }: SocialButtonProps) {
   return (
-    <button
+    <Button
       type="button"
-      className="flex size-16 items-center justify-center rounded-full bg-[#ebebeb] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae] md:bg-white md:hover:bg-[#f7f7f7]"
+      variant="social"
+      size="icon"
       aria-label={label}
     >
       <Image src={iconSrc} alt="" width={24} height={24} aria-hidden="true" />
-    </button>
+    </Button>
   );
 }

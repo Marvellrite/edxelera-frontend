@@ -3,6 +3,8 @@
 import Image from "next/image";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { TextareaField } from "@/components/ui/input";
 import {
   onboardingSchema,
   type OnboardingFormValues,
@@ -136,48 +138,22 @@ export function OnboardingScreen() {
                 ) : null}
               </fieldset>
 
-              <div className="flex w-full flex-col gap-2">
-                <label
-                  htmlFor="learningGoal"
-                  className="text-base leading-6 text-[#181818] md:font-medium md:text-[#040506]"
-                >
-                  Learning Goal
-                </label>
-                <textarea
-                  id="learningGoal"
-                  name="learningGoal"
-                  value={values.learningGoal}
-                  placeholder="Tell us what you want to achieve"
-                  aria-invalid={Boolean(errors.learningGoal)}
-                  aria-describedby={
-                    errors.learningGoal ? "learningGoal-error" : undefined
-                  }
-                  onChange={(event) =>
-                    updateValue("learningGoal", event.currentTarget.value)
-                  }
-                  className={`min-h-28 w-full resize-none rounded-xl border bg-white p-4 text-base leading-6 text-[#181818] outline-none placeholder:text-[#979797] md:border-transparent md:text-sm md:font-medium md:leading-[21px] md:text-[#040506] md:placeholder:text-[#6e6e6e] ${
-                    errors.learningGoal
-                      ? "border-red-500 md:border-red-500"
-                      : "border-[#cbcbcb]"
-                  }`}
-                />
-                {errors.learningGoal ? (
-                  <p
-                    id="learningGoal-error"
-                    className="text-sm leading-5 text-red-600"
-                  >
-                    {errors.learningGoal}
-                  </p>
-                ) : null}
-              </div>
+              <TextareaField
+                id="learningGoal"
+                name="learningGoal"
+                label="Learning Goal"
+                value={values.learningGoal}
+                placeholder="Tell us what you want to achieve"
+                error={errors.learningGoal}
+                onChange={(event) =>
+                  updateValue("learningGoal", event.currentTarget.value)
+                }
+              />
             </div>
 
-            <button
-              type="submit"
-              className="flex h-14 w-full items-center justify-center rounded-xl bg-[#003dae] px-6 py-4 text-base font-semibold leading-6 text-white transition-colors hover:bg-[#00349a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
-            >
+            <Button type="submit" fullWidth>
               Continue
-            </button>
+            </Button>
           </form>
         </div>
       </section>

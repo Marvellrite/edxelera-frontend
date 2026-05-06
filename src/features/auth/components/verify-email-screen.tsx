@@ -4,6 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/ui/input";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
@@ -75,53 +77,22 @@ export function VerifyEmailScreen() {
                 </p>
               </div>
 
-              <div className="flex w-full flex-col gap-2">
-                <label
-                  htmlFor="code"
-                  className="text-base leading-6 text-[#181818] md:font-medium md:text-[#040506]"
-                >
-                  Verification Code
-                </label>
-                <div
-                  className={`flex h-[58px] w-full items-center gap-2 border bg-white p-4 md:h-[50px] md:rounded-full md:border-transparent md:px-5 ${
-                    errors.code
-                      ? "rounded-xl border-red-500 md:border-red-500"
-                      : "rounded-xl border-[#cbcbcb] md:border-transparent"
-                  }`}
-                >
-                  <Image
-                    src="/icons/auth-sms.svg"
-                    alt=""
-                    width={24}
-                    height={24}
-                    aria-hidden="true"
-                  />
-                  <input
-                    id="code"
-                    name="code"
-                    inputMode="numeric"
-                    autoComplete="one-time-code"
-                    value={values.code}
-                    placeholder="Enter verification code"
-                    aria-invalid={Boolean(errors.code)}
-                    aria-describedby={errors.code ? "code-error" : undefined}
-                    onChange={(event) => updateCode(event.currentTarget.value)}
-                    className="min-w-0 flex-1 bg-transparent text-base leading-6 text-[#181818] outline-none placeholder:text-[#979797] md:text-sm md:font-medium md:leading-[21px] md:text-[#040506] md:placeholder:text-[#6e6e6e]"
-                  />
-                </div>
-                {errors.code ? (
-                  <p id="code-error" className="text-sm leading-5 text-red-600">
-                    {errors.code}
-                  </p>
-                ) : null}
-              </div>
+              <InputField
+                id="code"
+                name="code"
+                label="Verification Code"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
+                value={values.code}
+                placeholder="Enter verification code"
+                error={errors.code}
+                onChange={(event) => updateCode(event.currentTarget.value)}
+              />
 
-              <button
-                type="submit"
-                className="flex h-14 w-full items-center justify-center rounded-xl bg-[#003dae] px-6 py-4 text-base font-semibold leading-6 text-white transition-colors hover:bg-[#00349a] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
-              >
+              <Button type="submit" fullWidth>
                 Verify Email
-              </button>
+              </Button>
             </div>
 
             <div className="flex flex-col items-center gap-5 text-center">
@@ -143,6 +114,10 @@ export function VerifyEmailScreen() {
       </section>
     </main>
   );
+}
+
+function AuthFieldIcon({ src }: { src: string }) {
+  return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
 }
 
 function BackgroundPanel({ className }: { className: string }) {
