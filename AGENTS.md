@@ -120,13 +120,35 @@ need to be shared across the app.
 
 ## API Rules
 
-- Do not hardcode API URLs in components.
-- Use a centralized API client in `src/lib/api`.
-- Place backend calls in `src/features/*/services`.
-- Do not fetch directly inside generic UI components.
-- Keep business rules out of Next.js route handlers unless the project intentionally adds a
-  backend-for-frontend layer.
-- Keep request and response types explicit.
+- Do not hardcode API URLs inside components or feature logic.
+- Use the centralized Axios client from `src/lib/api`.
+- All backend communication must go through `src/features/*/services`.
+- Use React Query for all asynchronous server-state management:
+  - data fetching
+  - caching
+  - mutations
+  - synchronization
+  - optimistic updates
+  - background refetching
+
+- Prefer React Query hooks inside feature hooks such as:
+  - `useCourses`
+  - `useEnrollCourse`
+  - `useAssessmentAttempt`
+
+- Do not call Axios directly inside UI components.
+- Generic/shared UI components must never contain backend fetching logic.
+- Keep business rules out of Next.js route handlers unless intentionally implementing a backend-for-frontend (BFF) layer.
+- Keep request and response types explicit and strongly typed.
+- Reuse shared API response types where possible.
+- Use interceptors in the centralized Axios client for:
+  - authentication headers
+  - token refresh
+  - request logging
+  - error normalization
+
+- Avoid duplicate API logic across features.
+- Keep API services focused and feature-scoped.
 
 ## Component Rules
 
