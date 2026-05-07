@@ -23,7 +23,7 @@ export function FormField({
         {label}
       </FieldLabel>
       {children}
-      {hint ? <span className="text-xs font-normal text-zinc-500">{hint}</span> : null}
+      {hint ? <span className="text-xs font-normal">{hint}</span> : null}
     </div>
   );
 }

@@ -26,7 +26,7 @@ export function FieldLabel({
   return (
     <label
       className={cn(
-        "relative flex w-fit items-center gap-3 text-base font-normal leading-6 text-[#181818]",
+        "relative flex w-fit items-center gap-3 text-base font-normal leading-6",
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ export function FieldLabel({
       {type === "required" ? (
         <span
           aria-hidden="true"
-          className="absolute -left-2 top-0.5 text-base font-normal leading-none text-[#e30202]"
+          className="absolute -left-2 top-0.5 text-base font-normal leading-none"
         >
           *
         </span>
@@ -43,13 +43,13 @@ export function FieldLabel({
       {showHelpIcon ? (
         <span
           aria-hidden="true"
-          className="flex size-6 shrink-0 items-center justify-center text-[#003dae] [--stroke-0:currentColor] [&_svg]:size-6"
+          className="flex size-6 shrink-0 items-center justify-center [--stroke-0:currentColor] [&_svg]:size-6"
         >
           {helpIcon}
         </span>
       ) : null}
       {type === "optional" ? (
-        <span className="text-base font-normal leading-6 text-[#979797]">
+        <span className="text-base font-normal leading-6">
           {optionalText}
         </span>
       ) : null}

@@ -39,7 +39,7 @@ export function OnboardingScreen() {
   function submitOnboarding() {}
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
+    <main className="relative min-h-screen overflow-hidden bg-white md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
       <AuthBackgroundPanels />
 
       <section
@@ -56,19 +56,19 @@ export function OnboardingScreen() {
             onSubmit={handleSubmit(submitOnboarding)}
             className="mt-10 flex flex-col gap-6 md:mt-8 lg:mt-10"
           >
-            <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
+            <h1 className="text-[32px] font-semibold leading-10 tracking-normal md:font-medium md:leading-[48px]">
               Welcome to Edxelera
             </h1>
 
             <div className="flex flex-col items-center gap-10">
-              <p className="w-full text-base leading-6 text-[#181818]">
+              <p className="w-full text-base leading-6">
                 Let&apos;s set things up so your learning experience feels just
                 right for you
               </p>
 
               <button
                 type="button"
-                className="flex size-[88px] items-center justify-center rounded-full bg-[#ebebeb] text-[#303030] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+                className="flex size-[88px] items-center justify-center rounded-full bg-[#ebebeb] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 aria-label="Upload profile photo"
               >
                 <GalleryAddIcon />
@@ -114,7 +114,7 @@ export function OnboardingScreen() {
                 </Button>
                 <button
                   type="button"
-                  className="flex h-14 w-full items-center justify-center rounded-xl px-6 text-base font-semibold leading-6 text-[#003dae] transition-colors hover:bg-[#f3f6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+                  className="flex h-14 w-full items-center justify-center rounded-xl px-6 text-base font-semibold leading-6 transition-colors hover:bg-[#f3f6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 >
                   Skip for now
                 </button>
@@ -138,14 +138,14 @@ function LearningSelect({
     <div className="flex w-full flex-col gap-2">
       <label
         htmlFor="learningInterest"
-        className="text-base font-normal leading-6 text-[#181818]"
+        className="text-base font-normal leading-6"
       >
         What would you like to learn?
       </label>
-      <div className="relative flex h-14 w-full items-center rounded-xl border border-[#cbcbcb] bg-white text-[#303030] transition-colors focus-within:border-[#003dae] focus-within:ring-2 focus-within:ring-[#003dae]">
+      <div className="relative flex h-14 w-full items-center rounded-xl border border-[#cbcbcb] bg-white transition-colors focus-within:border-[#003dae] focus-within:ring-2 focus-within:ring-[#003dae]">
         <select
           id="learningInterest"
-          className="h-full w-full appearance-none rounded-xl bg-transparent px-4 pr-12 text-base leading-6 text-[#181818] outline-none invalid:text-[#979797]"
+          className="h-full w-full appearance-none rounded-xl bg-transparent px-4 pr-12 text-base leading-6 outline-none"
           {...register}
         >
           <option value="">Select</option>
@@ -156,13 +156,13 @@ function LearningSelect({
           ))}
         </select>
         <span
-          className="pointer-events-none absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center text-[#303030]"
+          className="pointer-events-none absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center"
           aria-hidden="true"
         >
           <ChevronDownIcon />
         </span>
       </div>
-      {error ? <p className="text-sm leading-5 text-[#e30202]">{error}</p> : null}
+      {error ? <p className="text-sm leading-5">{error}</p> : null}
     </div>
   );
 }

@@ -33,7 +33,7 @@ export function SignUpScreen() {
   function submitSignUp() {}
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
+    <main className="relative min-h-screen overflow-hidden bg-white md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
       <AuthBackgroundPanels imageSrc="/images/auth-sign-up-background.png" />
 
       <section
@@ -51,7 +51,7 @@ export function SignUpScreen() {
             className="mt-[47px] flex flex-col gap-6 md:mt-6"
           >
             <div className="flex flex-col gap-6">
-              <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
+              <h1 className="text-[32px] font-semibold leading-10 tracking-normal md:font-medium md:leading-[48px]">
                 Sign up
               </h1>
 
@@ -98,11 +98,11 @@ export function SignUpScreen() {
               </div>
 
               <div className="flex flex-col items-center gap-5">
-                <p className="text-center text-base leading-6 text-[#303030] md:text-lg md:leading-[27px] md:text-[#494949] lg:text-base lg:leading-6">
+                <p className="text-center text-base leading-6 md:text-lg md:leading-[27px] lg:text-base lg:leading-6">
                   Already have an account?{" "}
                   <Link
                     href="/auth"
-                    className="font-semibold text-[#003dae] md:font-medium md:text-[#001146]"
+                    className="font-semibold md:font-medium"
                   >
                     Login
                   </Link>
@@ -114,18 +114,18 @@ export function SignUpScreen() {
               </div>
             </div>
 
-            <p className="text-center text-base leading-6 text-[#494949] md:text-base md:leading-6">
+            <p className="text-center text-base leading-6 md:text-base md:leading-6">
               By creating an account, you agree to Edxelera&apos;s{" "}
               <Link
                 href="/terms-and-services"
-                className="font-semibold text-[#003dae] md:font-medium md:text-[#001146]"
+                className="font-semibold md:font-medium"
               >
                 terms of service
               </Link>{" "}
               and{" "}
               <Link
                 href="/terms-and-services"
-                className="font-semibold text-[#003dae] md:font-medium md:text-[#001146]"
+                className="font-semibold md:font-medium"
               >
                 privacy policy
               </Link>
@@ -134,7 +134,7 @@ export function SignUpScreen() {
             <div className="flex flex-col items-center gap-5">
               <div className="flex w-full items-center justify-center gap-4">
                 <span className="h-px flex-1 bg-[#d7d7d7] md:bg-[#a6a6a6]" />
-                <span className="whitespace-nowrap text-sm leading-[18px] text-[#646464] md:font-medium md:leading-[21px] md:text-[#6e6e6e]">
+                <span className="whitespace-nowrap text-sm leading-[18px] md:font-medium md:leading-[21px]">
                   Or continue with
                 </span>
                 <span className="h-px flex-1 bg-[#d7d7d7] md:bg-[#a6a6a6]" />

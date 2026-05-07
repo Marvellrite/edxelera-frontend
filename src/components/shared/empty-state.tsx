@@ -6,8 +6,8 @@ type EmptyStateProps = {
 export function EmptyState({ title, description }: EmptyStateProps) {
   return (
     <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-8 text-center">
-      <h2 className="text-lg font-semibold text-zinc-950">{title}</h2>
-      <p className="mt-2 text-sm text-zinc-500">{description}</p>
+      <h2 className="text-lg font-semibold">{title}</h2>
+      <p className="mt-2 text-sm">{description}</p>
     </div>
   );
 }

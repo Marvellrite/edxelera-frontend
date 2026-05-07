@@ -27,7 +27,7 @@ type Stage = "email" | "otp" | "reset";
 
 export function ForgottenPasswordScreen() {
   const router = useRouter();
-  const [stage, setStage] = useState<Stage>("email");
+  const [stage, setStage] = useState<Stage>("reset");
   const [email, setEmail] = useState("");
   const [otpToken, setOtpToken] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -101,35 +101,43 @@ export function ForgottenPasswordScreen() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f3f3f3] px-4 py-12 text-[#181818] md:flex md:items-center md:justify-center">
-      <section className="mx-auto w-full max-w-[396px]">
-        <div className="flex justify-center">
-          <AuthLogo />
-        </div>
+    <main className="min-h-screen bg-white px-[17px]">
+      <section className="mx-auto flex w-full max-w-[396px] flex-col items-center gap-10 pt-[95px]">
+        <AuthLogo className="h-10 w-[214.63px]" />
 
         {stage === "email" && (
           <form
             noValidate
             onSubmit={emailForm.handleSubmit(submitEmail)}
-            className="mt-12 flex flex-col gap-10"
+            className="flex w-full flex-col gap-6 backdrop-blur-[50px]"
           >
-            <h1 className="text-[62px] font-semibold leading-[1.05] tracking-[-0.03em] text-[#090b11] md:text-[56px]">
+            <h1 className="text-[32px] font-semibold leading-10 tracking-normal">
               Reset Password
             </h1>
 
-            <InputField
-              id="email"
-              label="Email"
-              type="email"
-              placeholder="Enter your email"
-              leading={<Image src="/icons/auth-sms.svg" alt="" width={24} height={24} />}
-              error={emailForm.formState.errors.email?.message}
-              {...emailForm.register("email")}
-            />
+            <div className="flex flex-col items-center gap-10">
+              <InputField
+                id="email"
+                label="Email"
+                type="email"
+                placeholder="Enter your email"
+                leading={
+                  <Image
+                    src="/icons/auth-sms.svg"
+                    alt=""
+                    width={24}
+                    height={24}
+                    aria-hidden="true"
+                  />
+                }
+                error={emailForm.formState.errors.email?.message}
+                {...emailForm.register("email")}
+              />
 
-            <Button type="submit" fullWidth className="rounded-[30px]" isLoading={isLoading}>
-              Send OTP
-            </Button>
+              <Button type="submit" fullWidth isLoading={isLoading}>
+                Send OTP
+              </Button>
+            </div>
           </form>
         )}
 
@@ -137,54 +145,89 @@ export function ForgottenPasswordScreen() {
           <form
             noValidate
             onSubmit={otpForm.handleSubmit(submitOtp)}
-            className="mt-12 flex flex-col gap-6"
+            className="flex w-full flex-col gap-6 backdrop-blur-[50px]"
           >
-            <h1 className="text-[44px] font-semibold leading-tight text-[#0c0c0c]">
+            <h1 className="text-[32px] font-semibold leading-10 tracking-normal">
               OTP Verification
             </h1>
-            <p className="text-base leading-6">
-              Enter the 6 digit OTP sent to <span className="font-semibold">{email}</span>.
-            </p>
 
-            <div>
-              <label className="mb-2 block text-base leading-6">OTP</label>
-              <div className="flex gap-2">
-                {otpValues.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={(el) => {
-                      otpRefs.current[index] = el;
-                    }}
-                    value={digit}
-                    inputMode="numeric"
-                    maxLength={1}
-                    className="h-14 w-full rounded-xl border border-[#cbcbcb] bg-white text-center text-xl outline-none focus:border-[#003dae]"
-                    onChange={(event) => {
-                      const nextValue = event.target.value.replace(/\D/g, "").slice(-1);
-                      otpForm.setValue(`otp.${index}`, nextValue, { shouldValidate: true });
-                      if (nextValue && index < 5) otpRefs.current[index + 1]?.focus();
-                    }}
-                    onKeyDown={(event) => {
-                      if (event.key === "Backspace" && !digit && index > 0) {
-                        otpRefs.current[index - 1]?.focus();
-                      }
-                    }}
-                  />
-                ))}
+            <div className="flex w-full flex-col items-center gap-6">
+              <div className="flex w-full flex-col items-start gap-6">
+                <p className="w-full text-base leading-6">
+                  Enter the 6 digit OTP sent to your email to reset your
+                  password
+                </p>
+
+                <div className="flex w-full flex-col items-center gap-10">
+                  <div className="flex w-full flex-col items-start gap-2">
+                    <label className="block text-base leading-6">OTP</label>
+                    <div className="flex h-14 w-full items-start gap-2">
+                      {otpValues.map((digit, index) => (
+                        <input
+                          key={index}
+                          ref={(el) => {
+                            otpRefs.current[index] = el;
+                          }}
+                          value={digit}
+                          inputMode="numeric"
+                          maxLength={1}
+                          aria-label={`OTP digit ${index + 1}`}
+                          className="h-14 min-w-0 flex-1 rounded-xl border border-[#cbcbcb] bg-white p-4 text-center text-xl outline-none transition-colors focus:border-[#003dae]"
+                          onChange={(event) => {
+                            const nextValue = event.target.value
+                              .replace(/\D/g, "")
+                              .slice(-1);
+                            otpForm.setValue(`otp.${index}`, nextValue, {
+                              shouldValidate: true,
+                            });
+                            if (nextValue && index < 5) {
+                              otpRefs.current[index + 1]?.focus();
+                            }
+                          }}
+                          onKeyDown={(event) => {
+                            if (
+                              event.key === "Backspace" &&
+                              !digit &&
+                              index > 0
+                            ) {
+                              otpRefs.current[index - 1]?.focus();
+                            }
+                          }}
+                        />
+                      ))}
+                    </div>
+                    {otpForm.formState.errors.otp && (
+                      <p className="text-sm leading-5">
+                        {otpForm.formState.errors.otp.message}
+                      </p>
+                    )}
+                  </div>
+
+                  <Button
+                    type="submit"
+                    fullWidth
+                    isLoading={isLoading}
+                  >
+                    Verify
+                  </Button>
+                </div>
               </div>
-              {otpForm.formState.errors.otp && (
-                <p className="mt-2 text-sm text-[#e30202]">{otpForm.formState.errors.otp.message}</p>
-              )}
+
+              <div className="flex w-full flex-col items-center gap-3">
+                <p className="text-center text-base leading-6">
+                  Didn&apos;t receive the code?{" "}
+                  <button type="button" className="font-semibold text-[#003dae]">
+                    Resend
+                  </button>
+                </p>
+                <Link
+                  href="/auth"
+                  className="text-center text-base font-semibold leading-6 text-[#003dae]"
+                >
+                  Login with password
+                </Link>
+              </div>
             </div>
-
-            <Button type="submit" fullWidth isLoading={isLoading}>
-              Verify
-            </Button>
-
-            <p className="text-center text-base text-[#303030]">
-              Didn&apos;t receive the code? <button type="button" className="font-semibold text-[#003dae]">Resend</button>
-            </p>
-            <Link href="/auth" className="text-center font-semibold text-[#003dae]">Login with password</Link>
           </form>
         )}
 
@@ -192,9 +235,9 @@ export function ForgottenPasswordScreen() {
           <form
             noValidate
             onSubmit={resetForm.handleSubmit(submitReset)}
-            className="mt-12 flex flex-col gap-6"
+            className="flex w-full flex-col gap-6"
           >
-            <h1 className="text-[56px] font-medium leading-tight text-[#040506]">Reset Password</h1>
+            <h1 className="text-[32px] font-semibold leading-10">Reset Password</h1>
 
             <InputField
               id="password"
@@ -218,13 +261,13 @@ export function ForgottenPasswordScreen() {
               {...resetForm.register("confirmPassword")}
             />
 
-            <Button type="submit" fullWidth className="rounded-[30px]" isLoading={isLoading}>
+            <Button type="submit" fullWidth isLoading={isLoading}>
               Change Password
             </Button>
           </form>
         )}
 
-        {errorMessage && <p className="mt-4 text-center text-sm text-[#e30202]">{errorMessage}</p>}
+        {errorMessage && <p className="mt-4 text-center text-sm">{errorMessage}</p>}
       </section>
     </main>
   );

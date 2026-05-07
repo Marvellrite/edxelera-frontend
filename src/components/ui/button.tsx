@@ -24,10 +24,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary: "bg-[#003dae] text-white hover:bg-[#00349a]",
-  secondary: "border border-zinc-300 bg-white text-zinc-950 hover:bg-zinc-50",
-  ghost: "text-zinc-700 hover:bg-zinc-100",
-  social: "bg-[#ebebeb] text-[#181818] hover:bg-[#e2e2e2] md:bg-white md:hover:bg-[#f7f7f7]",
+  primary: "bg-[#003dae] text-[var(--color-button-primary-foreground)] hover:bg-[#00349a]",
+  secondary: "border border-zinc-300 bg-white hover:bg-zinc-50",
+  ghost: "hover:bg-zinc-100",
+  social: "bg-[#ebebeb] hover:bg-[#e2e2e2] md:bg-white md:hover:bg-[#f7f7f7]",
 };
 
 const sizes = {

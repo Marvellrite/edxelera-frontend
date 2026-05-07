@@ -36,7 +36,7 @@ export function LoginScreen() {
   function submitLogin() {}
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
+    <main className="relative min-h-screen overflow-hidden bg-white md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
       <AuthBackgroundPanels />
 
       <section
@@ -54,7 +54,7 @@ export function LoginScreen() {
             className="mt-[47px] flex flex-col gap-8 md:mt-6 md:gap-10 lg:mt-10"
           >
             <div className="flex flex-col gap-6">
-              <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
+              <h1 className="text-[32px] font-semibold leading-10 tracking-normal md:font-medium md:leading-[48px]">
                 Login
               </h1>
 
@@ -105,7 +105,7 @@ export function LoginScreen() {
 
               <div className="flex flex-col gap-6 md:gap-5">
                 <div className="flex items-start justify-between gap-4">
-                  <label className="flex min-w-[125px] items-center gap-2 text-base leading-6 text-[#303030] md:text-[#2c2c2c]">
+                  <label className="flex min-w-[125px] items-center gap-2 text-base leading-6">
                     <input
                       type="checkbox"
                       className="peer sr-only"
@@ -114,8 +114,8 @@ export function LoginScreen() {
                     <span
                       className={`flex size-6 shrink-0 items-center justify-center rounded border-2 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#003dae] ${
                         rememberMe
-                          ? "border-[#003dae] bg-[#003dae] text-white"
-                          : "border-[#cbcbcb] bg-white text-transparent"
+                          ? "border-[#003dae] bg-[#003dae]"
+                          : "border-[#cbcbcb] bg-white [&_svg]:opacity-0"
                       }`}
                       aria-hidden="true"
                     >
@@ -127,7 +127,7 @@ export function LoginScreen() {
 
                   <Link
                     href="/auth/forgotten-password"
-                    className="whitespace-nowrap text-base leading-6 text-[#303030] md:text-[#2c2c2c]"
+                    className="whitespace-nowrap text-base leading-6"
                   >
                     Forgot Password?
                   </Link>
@@ -142,7 +142,7 @@ export function LoginScreen() {
             <div className="flex flex-col items-center gap-5">
               <div className="flex w-full items-center justify-center gap-4">
                 <span className="h-px flex-1 bg-[#d7d7d7] md:bg-[#a6a6a6]" />
-                <span className="whitespace-nowrap text-sm leading-[18px] text-[#646464] md:font-medium md:leading-[21px] md:text-[#6e6e6e]">
+                <span className="whitespace-nowrap text-sm leading-[18px] md:font-medium md:leading-[21px]">
                   Or continue with
                 </span>
                 <span className="h-px flex-1 bg-[#d7d7d7] md:bg-[#a6a6a6]" />
@@ -159,11 +159,11 @@ export function LoginScreen() {
                 />
               </div>
 
-              <p className="text-center text-base leading-6 text-[#303030] md:text-lg md:leading-[27px] md:text-[#494949] lg:text-base lg:leading-6">
+              <p className="text-center text-base leading-6 md:text-lg md:leading-[27px] lg:text-base lg:leading-6">
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/auth/sign-up"
-                  className="font-semibold text-[#003dae] md:font-medium md:text-[#001146]"
+                  className="font-semibold md:font-medium"
                 >
                   Sign Up
                 </Link>

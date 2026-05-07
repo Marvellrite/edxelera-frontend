@@ -87,7 +87,7 @@ export function VerifyEmailScreen() {
   function submitVerification() {}
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
+    <main className="relative min-h-screen overflow-hidden bg-white md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
       <AuthBackgroundPanels />
 
       <section
@@ -107,10 +107,10 @@ export function VerifyEmailScreen() {
             <div className="flex flex-col gap-20 md:gap-14 lg:gap-12">
               <div className="flex flex-col gap-[74px] md:gap-12 lg:gap-10">
                 <div className="flex flex-col gap-16 md:gap-10">
-                  <h1 className="text-[40px] font-semibold leading-[48px] tracking-normal text-[#040506] md:text-[48px] md:leading-[58px] lg:text-[44px] lg:leading-[54px]">
+                  <h1 className="text-[40px] font-semibold leading-[48px] tracking-normal md:text-[48px] md:leading-[58px] lg:text-[44px] lg:leading-[54px]">
                     OTP Verification
                   </h1>
-                  <p className="max-w-[708px] text-[28px] font-semibold leading-[48px] text-[#040506] md:text-[30px] lg:text-[24px] lg:leading-9">
+                  <p className="max-w-[708px] text-[28px] font-semibold leading-[48px] md:text-[30px] lg:text-[24px] lg:leading-9">
                     Enter the 6 digit OTP sent to your email to reset your
                     password
                   </p>
@@ -140,12 +140,12 @@ export function VerifyEmailScreen() {
                         }
                         onKeyDown={(event) => handleCodeKeyDown(index, event)}
                         onPaste={handleCodePaste}
-                        className="aspect-square min-w-0 rounded-full border border-[#cbcbcb] bg-white text-center text-[32px] font-semibold leading-none text-[#181818] outline-none transition-colors focus:border-[#003dae] focus:ring-2 focus:ring-[#003dae] md:text-[40px] lg:text-[32px]"
+                        className="aspect-square min-w-0 rounded-full border border-[#cbcbcb] bg-white text-center text-[32px] font-semibold leading-none outline-none transition-colors focus:border-[#003dae] focus:ring-2 focus:ring-[#003dae] md:text-[40px] lg:text-[32px]"
                       />
                     ))}
                   </div>
                   {errors.code ? (
-                    <p className="text-sm leading-5 text-[#e30202]">
+                    <p className="text-sm leading-5">
                       {errors.code.message}
                     </p>
                   ) : null}
@@ -162,18 +162,18 @@ export function VerifyEmailScreen() {
             </div>
 
             <div className="flex flex-col items-center gap-8 text-center md:gap-6">
-              <p className="text-[32px] font-semibold leading-[38px] text-[#494949] md:text-2xl lg:text-xl">
+              <p className="text-[32px] font-semibold leading-[38px] md:text-2xl lg:text-xl">
                 Didn&apos;t see code?{" "}
                 <button
                   type="button"
-                  className="font-semibold text-[#003dae] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+                  className="font-semibold focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 >
                   Resend Code
                 </button>
               </p>
               <Link
                 href="/auth"
-                className="text-[32px] font-semibold leading-[38px] text-[#003dae] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae] md:text-2xl lg:text-xl"
+                className="text-[32px] font-semibold leading-[38px] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae] md:text-2xl lg:text-xl"
               >
                 Login with password
               </Link>

@@ -12,7 +12,7 @@ export function UserAvatar({ name }: UserAvatarProps) {
     .toUpperCase();
 
   return (
-    <span className="inline-flex size-10 items-center justify-center rounded-full bg-zinc-900 text-sm font-medium text-white">
+    <span className="inline-flex size-10 items-center justify-center rounded-full bg-zinc-900 text-sm font-medium">
       {initials}
     </span>
   );

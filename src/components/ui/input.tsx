@@ -25,53 +25,28 @@ const inputTokens = {
   base: {
     background: "#ffffff",
     border: "#cbcbcb",
-    icon: "#303030",
-    text: "#181818",
-    placeholder: "#979797",
-    message: "#646464",
   },
   hover: {
     background: "#ffffff",
     border: "#181818",
-    icon: "#303030",
-    text: "#181818",
-    placeholder: "#979797",
-    message: "#646464",
   },
   focus: {
     background: "#ffffff",
     border: "#cbcbcb",
-    focus: "#003dae",
-    icon: "#303030",
-    text: "#181818",
-    placeholder: "#979797",
-    message: "#646464",
   },
   error: {
     background: "#ffffff",
     filledBackground: "#fde6e6",
     border: "#e30202",
-    icon: "#e30202",
-    text: "#181818",
-    placeholder: "#979797",
-    message: "#e30202",
   },
   success: {
     background: "#ffffff",
     filledBackground: "#e6f5e8",
     border: "#039719",
-    icon: "#039719",
-    text: "#181818",
-    placeholder: "#979797",
-    message: "#039719",
   },
   disabled: {
     background: "#ebebeb",
     border: "#cbcbcb",
-    icon: "#979797",
-    text: "#646464",
-    placeholder: "#979797",
-    message: "#979797",
   },
 } as const;
 
@@ -143,7 +118,6 @@ export function InputField({
     defaultValue: props.defaultValue,
   });
   const valueState = getValueState(props.value, props.defaultValue);
-  const tokens = getInputTokens(resolvedState, valueState);
   const descriptionId = error
     ? `${id}-error`
     : helperText
@@ -183,7 +157,6 @@ export function InputField({
         id={descriptionId}
         error={error}
         helperText={helperText}
-        color={tokens.message}
       />
     </div>
   );
@@ -252,7 +225,7 @@ export function TextareaField({
         aria-describedby={cn(ariaDescribedBy, descriptionId)}
         style={getInputStyle(tokens, resolvedState)}
         className={cn(
-          "min-h-28 w-full resize-none rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 text-base leading-6 text-[var(--input-text)] outline-none transition-colors placeholder:text-[var(--input-placeholder)]",
+          "min-h-28 w-full resize-none rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 text-base leading-6 outline-none transition-colors",
           "hover:border-[var(--input-hover-border)] focus:border-[var(--input-border)] focus:ring-2 focus:ring-[#003dae]",
           "disabled:cursor-not-allowed",
           className,
@@ -263,7 +236,6 @@ export function TextareaField({
         id={descriptionId}
         error={error}
         helperText={helperText}
-        color={tokens.message}
       />
     </div>
   );
@@ -293,7 +265,7 @@ function InputShell({
       data-value-state={valueState}
       style={getInputStyle(tokens, normalizedState)}
       className={cn(
-        "relative flex h-14 w-full items-center gap-2 rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 text-[var(--input-icon)] transition-colors",
+        "relative flex h-14 w-full items-center gap-2 rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 transition-colors",
         "before:pointer-events-none before:absolute before:-inset-[3px] before:rounded-[14px] before:border-2 before:border-transparent before:content-[''] hover:border-[var(--input-hover-border)] focus-within:border-[var(--input-border)] focus-within:before:border-[#003dae]",
         normalizedState === "focus" && focusOutlineClassName,
         disabled && "cursor-not-allowed",
@@ -311,14 +283,14 @@ function InputSlot({ children }: { children?: ReactNode }) {
   }
 
   return (
-    <span className="relative z-[1] flex size-6 shrink-0 items-center justify-center text-[var(--input-icon)] [--stroke-0:currentColor] [&_svg]:size-6 [&_svg]:shrink-0">
+    <span className="relative z-[1] flex size-6 shrink-0 items-center justify-center [--stroke-0:currentColor] [&_svg]:size-6 [&_svg]:shrink-0">
       {children}
     </span>
   );
 }
 
 const inputControlClassName =
-  "relative z-[1] min-w-0 flex-1 bg-transparent text-base leading-6 text-[var(--input-text)] outline-none placeholder:text-[var(--input-placeholder)] disabled:cursor-not-allowed";
+  "relative z-[1] min-w-0 flex-1 bg-transparent text-base leading-6 outline-none disabled:cursor-not-allowed";
 
 function getResolvedState({
   disabled,
@@ -435,9 +407,6 @@ function getInputStyle(
     "--input-bg": tokens.background,
     "--input-border": tokens.border,
     "--input-hover-border": hoverBorder,
-    "--input-icon": tokens.icon,
-    "--input-text": tokens.text,
-    "--input-placeholder": tokens.placeholder,
   } as CSSProperties;
 }
 
@@ -445,16 +414,14 @@ function FieldMessage({
   id,
   error,
   helperText,
-  color,
 }: {
   id?: string;
   error?: string;
   helperText?: string;
-  color: string;
 }) {
   if (error) {
     return (
-      <p id={id} className="text-sm leading-5" style={{ color }}>
+      <p id={id} className="text-sm leading-5">
         {error}
       </p>
     );
@@ -462,7 +429,7 @@ function FieldMessage({
 
   if (helperText) {
     return (
-      <p id={id} className="text-sm leading-5" style={{ color }}>
+      <p id={id} className="text-sm leading-5">
         {helperText}
       </p>
     );
