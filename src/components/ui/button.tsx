@@ -27,7 +27,7 @@ const variants = {
   primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
   secondary: "border border-border bg-secondary text-secondary-foreground hover:bg-secondary-hover",
   ghost: "hover:bg-muted",
-  social: "bg-muted text-foreground hover:bg-secondary-hover md:bg-card md:hover:bg-muted",
+  social: "bg-muted text-foreground hover:ring-1 ring-border ",
 };
 
 const sizes = {

@@ -27,30 +27,30 @@ type InputValueState = "filled" | "unfilled";
 
 const inputTokens = {
   base: {
-    background: "#ffffff",
-    border: "#cbcbcb",
+    background: "var(--color-input)",
+    border: "var(--color-border)",
   },
   hover: {
-    background: "#ffffff",
-    border: "#181818",
+    background: "var(--color-input)",
+    border: "var(--color-foreground)",
   },
   focus: {
-    background: "#ffffff",
-    border: "#cbcbcb",
+    background: "var(--color-input)",
+    border: "var(--color-border)",
   },
   error: {
-    background: "#ffffff",
-    filledBackground: "#fde6e6",
-    border: "#e30202",
+    background: "var(--color-input)",
+    filledBackground: "var(--color-red-200)",
+    border: "var(--color-destructive)",
   },
   success: {
-    background: "#ffffff",
-    filledBackground: "#e6f5e8",
-    border: "#039719",
+    background: "var(--color-input)",
+    filledBackground: "var(--color-green-200)",
+    border: "var(--color-success)",
   },
   disabled: {
-    background: "#ebebeb",
-    border: "#cbcbcb",
+    background: "var(--color-muted)",
+    border: "var(--color-border)",
   },
 } as const;
 
@@ -258,7 +258,7 @@ export function TextareaField({
         style={getInputStyle(tokens, resolvedState)}
         className={cn(
           "min-h-28 w-full resize-none rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 text-base leading-6 outline-none transition-colors",
-          "hover:border-[var(--input-hover-border)] focus:border-[var(--input-border)] focus:ring-2 focus:ring-[#003dae]",
+          "hover:border-[var(--input-hover-border)] focus:border-[var(--input-border)] focus:ring-2 focus:ring-ring",
           "disabled:cursor-not-allowed",
           className,
         )}
@@ -289,7 +289,7 @@ function InputShell({
   const normalizedState = normalizeState(state);
   const tokens = getInputTokens(normalizedState, valueState);
   const focusOutlineClassName =
-    "before:border-[#003dae]";
+    "before:border-ring";
 
   return (
     <div
@@ -298,7 +298,7 @@ function InputShell({
       style={getInputStyle(tokens, normalizedState)}
       className={cn(
         "relative flex h-14 w-full items-center gap-2 rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 transition-colors",
-        "before:pointer-events-none before:absolute before:-inset-[3px] before:rounded-[14px] before:border-2 before:border-transparent before:content-[''] hover:border-[var(--input-hover-border)] focus-within:border-[var(--input-border)] focus-within:before:border-[#003dae]",
+        "before:pointer-events-none before:absolute before:-inset-[3px] before:rounded-[14px] before:border-2 before:border-transparent before:content-[''] hover:border-[var(--input-hover-border)] focus-within:border-[var(--input-border)] focus-within:before:border-ring",
         normalizedState === "focus" && focusOutlineClassName,
         disabled && "cursor-not-allowed",
         className,
@@ -335,7 +335,7 @@ function PasswordVisibilityButton({
     <button
       type="button"
       onClick={onToggle}
-      className="flex size-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+      className="flex size-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
       aria-label={isVisible ? "Hide password" : "Show password"}
       aria-pressed={isVisible}
     >
