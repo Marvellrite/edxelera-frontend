@@ -117,14 +117,14 @@ export function SignUpScreen() {
             <p className="text-center text-base leading-6 md:text-base md:leading-6">
               By creating an account, you agree to Edxelera&apos;s{" "}
               <Link
-                href="/terms-and-services"
+                href="/terms-of-service"
                 className="font-semibold md:font-medium"
               >
                 terms of service
               </Link>{" "}
               and{" "}
               <Link
-                href="/terms-and-services"
+                href="/terms-of-service"
                 className="font-semibold md:font-medium"
               >
                 privacy policy
