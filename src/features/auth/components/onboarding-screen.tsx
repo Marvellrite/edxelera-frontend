@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { zodResolver } from "@hookform/resolvers/zod";
 import type { ReactNode } from "react";
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";

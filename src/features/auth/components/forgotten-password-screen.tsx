@@ -8,6 +8,7 @@ import { useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
+import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   forgotPasswordEmailSchema,
   forgotPasswordOtpSchema,
@@ -21,7 +22,6 @@ import {
   sendForgotPasswordOtp,
   verifyForgotPasswordOtp,
 } from "@/features/auth/services/forgot-password-service";
-import { AuthLogo } from "@/features/auth/components/auth-logo";
 
 type Stage = "email" | "otp" | "reset";
 
