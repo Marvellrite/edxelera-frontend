@@ -1,6 +1,88 @@
 :root {
-  --color-app-background: #ffffff;
-  --color-app-foreground: #0c0c0c;
-  --color-button-primary-foreground: #ffffff;
+  --ui-app-background: var(--palette-neutral-200);
+  --ui-app-foreground: var(--palette-neutral-900);
+
+  --ui-primary: var(--palette-blue-600);
+  --ui-primary-hover: var(--palette-blue-700);
+  --ui-primary-foreground: #ffffff;
+
+  --ui-secondary: var(--palette-neutral-200);
+  --ui-secondary-hover: var(--palette-neutral-300);
+  --ui-secondary-foreground: var(--palette-neutral-900);
+
+  --ui-muted: var(--palette-neutral-200);
+  --ui-muted-foreground: var(--palette-neutral-500);
+
+  --ui-card: #ffffff;
+  --ui-card-foreground: var(--palette-neutral-900);
+
+  --ui-border: var(--palette-neutral-300);
+  --ui-input: #ffffff;
+  --ui-ring: var(--palette-blue-500);
+
+  --ui-destructive: var(--palette-red-600);
+  --ui-destructive-hover: var(--palette-red-700);
+  --ui-destructive-foreground: #ffffff;
+
+  --ui-success: var(--palette-green-600);
+  --ui-success-foreground: #ffffff;
+
+  --ui-warning: var(--palette-yellow-600);
+  --ui-warning-foreground: var(--palette-neutral-900);
+
+  --color-app-background: var(--ui-app-background);
+  --color-app-foreground: var(--ui-app-foreground);
+  --color-primary: var(--ui-primary);
+  --color-primary-hover: var(--ui-primary-hover);
+  --color-primary-foreground: var(--ui-primary-foreground);
+  --color-secondary: var(--ui-secondary);
+  --color-secondary-hover: var(--ui-secondary-hover);
+  --color-secondary-foreground: var(--ui-secondary-foreground);
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--ui-muted-foreground);
+  --color-card: var(--ui-card);
+  --color-card-foreground: var(--ui-card-foreground);
+  --color-border: var(--ui-border);
+  --color-input: var(--ui-input);
+  --color-ring: var(--ui-ring);
+  --color-destructive: var(--ui-destructive);
+  --color-destructive-hover: var(--ui-destructive-hover);
+  --color-destructive-foreground: var(--ui-destructive-foreground);
+  --color-success: var(--ui-success);
+  --color-success-foreground: var(--ui-success-foreground);
+  --color-warning: var(--ui-warning);
+  --color-warning-foreground: var(--ui-warning-foreground);
 }
 
+.dark {
+  --ui-app-background: var(--palette-neutral-900);
+  --ui-app-foreground: var(--palette-neutral-200);
+
+  --ui-primary: var(--palette-blue-400);
+  --ui-primary-hover: var(--palette-blue-300);
+  --ui-primary-foreground: var(--palette-neutral-900);
+
+  --ui-secondary: var(--palette-neutral-800);
+  --ui-secondary-hover: var(--palette-neutral-700);
+  --ui-secondary-foreground: var(--palette-neutral-200);
+
+  --ui-muted: var(--palette-neutral-800);
+  --ui-muted-foreground: var(--palette-neutral-400);
+
+  --ui-card: var(--palette-neutral-800);
+  --ui-card-foreground: var(--palette-neutral-200);
+
+  --ui-border: var(--palette-neutral-700);
+  --ui-input: var(--palette-neutral-800);
+  --ui-ring: var(--palette-blue-400);
+
+  --ui-destructive: var(--palette-red-500);
+  --ui-destructive-hover: var(--palette-red-400);
+  --ui-destructive-foreground: #ffffff;
+
+  --ui-success: var(--palette-green-500);
+  --ui-success-foreground: var(--palette-neutral-900);
+
+  --ui-warning: var(--palette-yellow-500);
+  --ui-warning-foreground: var(--palette-neutral-900);
+}

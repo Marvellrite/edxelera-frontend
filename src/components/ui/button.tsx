@@ -24,10 +24,10 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const variants = {
-  primary: "bg-[#003dae] text-[var(--color-button-primary-foreground)] hover:bg-[#00349a]",
-  secondary: "border border-zinc-300 bg-white hover:bg-zinc-50",
-  ghost: "hover:bg-zinc-100",
-  social: "bg-[#ebebeb] hover:bg-[#e2e2e2] md:bg-white md:hover:bg-[#f7f7f7]",
+  primary: "bg-primary text-primary-foreground hover:bg-primary-hover",
+  secondary: "border border-border bg-secondary text-secondary-foreground hover:bg-secondary-hover",
+  ghost: "hover:bg-muted",
+  social: "bg-muted text-foreground hover:bg-secondary-hover md:bg-card md:hover:bg-muted",
 };
 
 const sizes = {
@@ -63,7 +63,7 @@ export function Button({
       disabled={disabled || isLoading}
       className={cn(
         "inline-flex items-center justify-center gap-2 transition-colors",
-        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]",
+        "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
         "disabled:pointer-events-none disabled:opacity-50",
         variants[variant],
         sizes[size],
