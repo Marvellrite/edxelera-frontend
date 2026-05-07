@@ -4,7 +4,7 @@ type CourseSidebarProps = {
 
 export function CourseSidebar({ title }: CourseSidebarProps) {
   return (
-    <aside className="rounded-lg border border-zinc-200 bg-white p-4">
+    <aside className="rounded-lg border border-border bg-card p-4">
       <p className="text-sm font-medium">{title}</p>
     </aside>
   );

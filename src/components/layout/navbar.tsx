@@ -8,7 +8,7 @@ const publicLinks = [
 
 export function Navbar() {
   return (
-    <header className="border-b border-zinc-200 bg-white">
+    <header className="border-b border-border bg-card">
       <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 sm:px-8">
         <Link href="/" className="text-lg font-semibold">
           EdXelera

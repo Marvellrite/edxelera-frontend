@@ -1,15 +1,99 @@
 @import "tailwindcss";
+@import "../styles/root.css";
 @import "../styles/theme.css";
 
 @theme inline {
-  --color-background: var(--color-app-background);
-  --color-foreground: var(--color-app-foreground);
+  --color-background: var(--ui-app-background);
+  --color-foreground: var(--ui-app-foreground);
+
+  --color-primary: var(--ui-primary);
+  --color-primary-hover: var(--ui-primary-hover);
+  --color-primary-foreground: var(--ui-primary-foreground);
+
+  --color-secondary: var(--ui-secondary);
+  --color-secondary-hover: var(--ui-secondary-hover);
+  --color-secondary-foreground: var(--ui-secondary-foreground);
+
+  --color-muted: var(--ui-muted);
+  --color-muted-foreground: var(--ui-muted-foreground);
+
+  --color-card: var(--ui-card);
+  --color-card-foreground: var(--ui-card-foreground);
+
+  --color-border: var(--ui-border);
+  --color-input: var(--ui-input);
+  --color-ring: var(--ui-ring);
+
+  --color-destructive: var(--ui-destructive);
+  --color-destructive-hover: var(--ui-destructive-hover);
+  --color-destructive-foreground: var(--ui-destructive-foreground);
+
+  --color-success: var(--ui-success);
+  --color-success-foreground: var(--ui-success-foreground);
+
+  --color-warning: var(--ui-warning);
+  --color-warning-foreground: var(--ui-warning-foreground);
+
+  --color-blue-900: var(--palette-blue-900);
+  --color-blue-800: var(--palette-blue-800);
+  --color-blue-700: var(--palette-blue-700);
+  --color-blue-600: var(--palette-blue-600);
+  --color-blue-500: var(--palette-blue-500);
+  --color-blue-400: var(--palette-blue-400);
+  --color-blue-300: var(--palette-blue-300);
+  --color-blue-200: var(--palette-blue-200);
+
+  --color-orange-900: var(--palette-orange-900);
+  --color-orange-800: var(--palette-orange-800);
+  --color-orange-700: var(--palette-orange-700);
+  --color-orange-600: var(--palette-orange-600);
+  --color-orange-500: var(--palette-orange-500);
+  --color-orange-400: var(--palette-orange-400);
+  --color-orange-300: var(--palette-orange-300);
+  --color-orange-200: var(--palette-orange-200);
+
+  --color-red-900: var(--palette-red-900);
+  --color-red-800: var(--palette-red-800);
+  --color-red-700: var(--palette-red-700);
+  --color-red-600: var(--palette-red-600);
+  --color-red-500: var(--palette-red-500);
+  --color-red-400: var(--palette-red-400);
+  --color-red-300: var(--palette-red-300);
+  --color-red-200: var(--palette-red-200);
+
+  --color-green-900: var(--palette-green-900);
+  --color-green-800: var(--palette-green-800);
+  --color-green-700: var(--palette-green-700);
+  --color-green-600: var(--palette-green-600);
+  --color-green-500: var(--palette-green-500);
+  --color-green-400: var(--palette-green-400);
+  --color-green-300: var(--palette-green-300);
+  --color-green-200: var(--palette-green-200);
+
+  --color-neutral-900: var(--palette-neutral-900);
+  --color-neutral-800: var(--palette-neutral-800);
+  --color-neutral-700: var(--palette-neutral-700);
+  --color-neutral-600: var(--palette-neutral-600);
+  --color-neutral-500: var(--palette-neutral-500);
+  --color-neutral-400: var(--palette-neutral-400);
+  --color-neutral-300: var(--palette-neutral-300);
+  --color-neutral-200: var(--palette-neutral-200);
+
+  --color-yellow-900: var(--palette-yellow-900);
+  --color-yellow-800: var(--palette-yellow-800);
+  --color-yellow-700: var(--palette-yellow-700);
+  --color-yellow-600: var(--palette-yellow-600);
+  --color-yellow-500: var(--palette-yellow-500);
+  --color-yellow-400: var(--palette-yellow-400);
+  --color-yellow-300: var(--palette-yellow-300);
+  --color-yellow-200: var(--palette-yellow-200);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
 body {
-  background: var(--color-app-background);
-  color: var(--color-app-foreground);
+  background: var(--color-background);
+  color: var(--color-foreground);
   font-family: Arial, Helvetica, sans-serif;
 }

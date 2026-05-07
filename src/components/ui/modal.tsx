@@ -7,7 +7,7 @@ type ModalProps = {
 
 export function Modal({ title, children }: ModalProps) {
   return (
-    <section className="rounded-lg border border-zinc-200 bg-white p-6 shadow-sm">
+    <section className="rounded-lg border border-border bg-card text-card-foreground p-6 shadow-sm">
       <h2 className="text-lg font-semibold">{title}</h2>
       <div className="mt-4">{children}</div>
     </section>
