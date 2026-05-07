@@ -106,6 +106,7 @@ type InputFieldProps = InputHTMLAttributes<HTMLInputElement> & {
   error?: string;
   helperText?: string;
   labelHelpIcon?: ReactNode;
+  showLabelHelpIcon?: boolean;
   labelType?: FieldLabelType;
   optionalLabel?: string;
   leading?: ReactNode;
@@ -121,6 +122,7 @@ export function InputField({
   error,
   helperText,
   labelHelpIcon,
+  showLabelHelpIcon = false,
   labelType,
   leading,
   optionalLabel,
@@ -155,6 +157,7 @@ export function InputField({
         htmlFor={id}
         helpIcon={labelHelpIcon}
         optionalText={optionalLabel}
+        showHelpIcon={showLabelHelpIcon}
         type={resolvedLabelType}
       >
         {label}
@@ -192,6 +195,7 @@ type TextareaFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   error?: string;
   helperText?: string;
   labelHelpIcon?: ReactNode;
+  showLabelHelpIcon?: boolean;
   labelType?: FieldLabelType;
   optionalLabel?: string;
   state?: InputFieldState;
@@ -203,6 +207,7 @@ export function TextareaField({
   error,
   helperText,
   labelHelpIcon,
+  showLabelHelpIcon = false,
   labelType,
   optionalLabel,
   state,
@@ -233,6 +238,7 @@ export function TextareaField({
         htmlFor={id}
         helpIcon={labelHelpIcon}
         optionalText={optionalLabel}
+        showHelpIcon={showLabelHelpIcon}
         type={resolvedLabelType}
       >
         {label}
@@ -279,7 +285,7 @@ function InputShell({
   const normalizedState = normalizeState(state);
   const tokens = getInputTokens(normalizedState, valueState);
   const focusOutlineClassName =
-    "before:absolute before:-inset-[3px] before:rounded-[14px] before:border-2 before:border-[#003dae]";
+    "before:border-[#003dae]";
 
   return (
     <div
@@ -288,7 +294,7 @@ function InputShell({
       style={getInputStyle(tokens, normalizedState)}
       className={cn(
         "relative flex h-14 w-full items-center gap-2 rounded-xl border border-[var(--input-border)] bg-[var(--input-bg)] p-4 text-[var(--input-icon)] transition-colors",
-        "before:pointer-events-none before:content-[''] hover:border-[var(--input-hover-border)] focus-within:border-[var(--input-border)] focus-within:before:absolute focus-within:before:-inset-[3px] focus-within:before:rounded-[14px] focus-within:before:border-2 focus-within:before:border-[#003dae]",
+        "before:pointer-events-none before:absolute before:-inset-[3px] before:rounded-[14px] before:border-2 before:border-transparent before:content-[''] hover:border-[var(--input-hover-border)] focus-within:border-[var(--input-border)] focus-within:before:border-[#003dae]",
         normalizedState === "focus" && focusOutlineClassName,
         disabled && "cursor-not-allowed",
         className,

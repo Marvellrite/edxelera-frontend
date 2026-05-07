@@ -1,0 +1,1 @@
+- will check the layout config of the auth screens

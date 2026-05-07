@@ -1,77 +1,49 @@
 "use client";
 
 import Image from "next/image";
-import type { FormEvent } from "react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { ReactNode } from "react";
+import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { TextareaField } from "@/components/ui/input";
+import { InputField } from "@/components/ui/input";
+import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import {
   onboardingSchema,
   type OnboardingFormValues,
 } from "@/features/auth/schemas/onboarding-schema";
 
-type OnboardingFormErrors = Partial<Record<keyof OnboardingFormValues, string>>;
-
 const initialValues: OnboardingFormValues = {
-  role: "student",
-  learningGoal: "",
+  bio: "",
+  location: "",
+  secondaryLocation: "",
+  learningInterest: "",
 };
 
-const roleOptions = [
-  {
-    value: "student",
-    title: "Student",
-    description: "Learn with courses, assessments, and progress tracking.",
-  },
-  {
-    value: "instructor",
-    title: "Instructor",
-    description: "Create courses and manage learner experiences.",
-  },
+const learningOptions = [
+  "Software development",
+  "Product design",
+  "Data analytics",
+  "Business strategy",
 ] as const;
 
 export function OnboardingScreen() {
-  const [values, setValues] = useState<OnboardingFormValues>(initialValues);
-  const [errors, setErrors] = useState<OnboardingFormErrors>({});
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<OnboardingFormValues>({
+    resolver: zodResolver(onboardingSchema),
+    defaultValues: initialValues,
+  });
 
-  function updateValue<TKey extends keyof OnboardingFormValues>(
-    key: TKey,
-    value: OnboardingFormValues[TKey],
-  ) {
-    setValues((currentValues) => ({ ...currentValues, [key]: value }));
-    setErrors((currentErrors) => ({ ...currentErrors, [key]: undefined }));
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const result = onboardingSchema.safeParse(values);
-
-    if (!result.success) {
-      setErrors(
-        result.error.issues.reduce<OnboardingFormErrors>((nextErrors, issue) => {
-          const field = issue.path[0];
-
-          if (field === "role" || field === "learningGoal") {
-            nextErrors[field] = issue.message;
-          }
-
-          return nextErrors;
-        }, {}),
-      );
-      return;
-    }
-
-    setErrors({});
-  }
+  function submitOnboarding() {}
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
-      <BackgroundPanel className="absolute inset-0 hidden md:block lg:hidden" />
-      <BackgroundPanel className="relative hidden min-h-screen lg:block" />
+      <AuthBackgroundPanels />
 
       <section
-        className="relative z-10 flex min-h-screen justify-center px-4 py-12 md:items-center md:px-6 md:py-10 lg:bg-[#f8f9ff] lg:px-8"
+        className="relative z-10 flex min-h-screen justify-center px-4 py-16 md:items-center md:px-6 md:py-10 lg:bg-[#f8f9ff] lg:px-8"
         aria-label="Onboarding"
       >
         <div className="w-full max-w-[396px] md:max-w-[469px] md:rounded-[20px] md:bg-[#f3f3f3] md:p-6 lg:max-w-[444px]">
@@ -88,72 +60,73 @@ export function OnboardingScreen() {
 
           <form
             noValidate
-            onSubmit={handleSubmit}
-            className="mt-[47px] flex flex-col gap-6 md:mt-10"
+            onSubmit={handleSubmit(submitOnboarding)}
+            className="mt-10 flex flex-col gap-6 md:mt-8 lg:mt-10"
           >
-            <div className="flex flex-col gap-3">
-              <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
-                Welcome to EdXelera
-              </h1>
-              <p className="text-base leading-6 text-[#646464]">
-                Personalize your account so we can shape the right learning
-                experience for you.
+            <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
+              Welcome to Edxelera
+            </h1>
+
+            <div className="flex flex-col items-center gap-10">
+              <p className="w-full text-base leading-6 text-[#181818]">
+                Let&apos;s set things up so your learning experience feels just
+                right for you
               </p>
+
+              <button
+                type="button"
+                className="flex size-[88px] items-center justify-center rounded-full bg-[#ebebeb] text-[#303030] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+                aria-label="Upload profile photo"
+              >
+                <GalleryAddIcon />
+              </button>
+
+              <div className="flex w-full flex-col gap-4">
+                <InputField
+                  id="bio"
+                  label="Bio"
+                  leading={<UserIcon />}
+                  placeholder="Say something about yourself..."
+                  error={errors.bio?.message}
+                  {...register("bio")}
+                />
+
+                <InputField
+                  id="location"
+                  label="Location"
+                  leading={<LocationIcon />}
+                  placeholder="Enter your location"
+                  error={errors.location?.message}
+                  {...register("location")}
+                />
+
+                <InputField
+                  id="secondaryLocation"
+                  label="Location"
+                  leading={<LocationIcon />}
+                  placeholder="Enter your location"
+                  error={errors.secondaryLocation?.message}
+                  {...register("secondaryLocation")}
+                />
+
+                <LearningSelect
+                  error={errors.learningInterest?.message}
+                  register={register("learningInterest")}
+                />
+              </div>
+
+              <div className="flex w-full flex-col gap-2">
+                <Button type="submit" fullWidth>
+                  Continue
+                </Button>
+                <button
+                  type="button"
+                  className="flex h-14 w-full items-center justify-center rounded-xl px-6 text-base font-semibold leading-6 text-[#003dae] transition-colors hover:bg-[#f3f6ff] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+                >
+                  Skip for now
+                </button>
+              </div>
             </div>
-
-            <div className="flex flex-col gap-4">
-              <fieldset className="flex flex-col gap-3">
-                <legend className="text-base leading-6 text-[#181818] md:font-medium md:text-[#040506]">
-                  How will you use EdXelera?
-                </legend>
-                <div className="grid gap-3">
-                  {roleOptions.map((option) => (
-                    <label
-                      key={option.value}
-                      className={`cursor-pointer rounded-xl border bg-white p-4 transition-colors md:rounded-[20px] ${
-                        values.role === option.value
-                          ? "border-[#003dae]"
-                          : "border-[#cbcbcb] md:border-transparent"
-                      }`}
-                    >
-                      <input
-                        type="radio"
-                        name="role"
-                        value={option.value}
-                        checked={values.role === option.value}
-                        onChange={() => updateValue("role", option.value)}
-                        className="sr-only"
-                      />
-                      <span className="block text-base font-semibold leading-6 text-[#0c0c0c]">
-                        {option.title}
-                      </span>
-                      <span className="mt-1 block text-sm leading-5 text-[#646464]">
-                        {option.description}
-                      </span>
-                    </label>
-                  ))}
-                </div>
-                {errors.role ? (
-                  <p className="text-sm leading-5 text-red-600">{errors.role}</p>
-                ) : null}
-              </fieldset>
-
-              <TextareaField
-                id="learningGoal"
-                name="learningGoal"
-                label="Learning Goal"
-                value={values.learningGoal}
-                placeholder="Tell us what you want to achieve"
-                error={errors.learningGoal}
-                onChange={(event) =>
-                  updateValue("learningGoal", event.currentTarget.value)
-                }
-              />
-            </div>
-
-            <Button type="submit" fullWidth>
-              Continue
-            </Button>
           </form>
         </div>
       </section>
@@ -161,18 +134,149 @@ export function OnboardingScreen() {
   );
 }
 
-function BackgroundPanel({ className }: { className: string }) {
+function LearningSelect({
+  error,
+  register,
+}: {
+  error?: string;
+  register: UseFormRegisterReturn<"learningInterest">;
+}) {
   return (
-    <div className={className} aria-hidden="true">
-      <Image
-        src="/images/auth-background.png"
-        alt=""
-        fill
-        priority
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 to-black/40" />
+    <div className="flex w-full flex-col gap-2">
+      <label
+        htmlFor="learningInterest"
+        className="text-base font-normal leading-6 text-[#181818]"
+      >
+        What would you like to learn?
+      </label>
+      <div className="relative flex h-14 w-full items-center rounded-xl border border-[#cbcbcb] bg-white text-[#303030] transition-colors focus-within:border-[#003dae] focus-within:ring-2 focus-within:ring-[#003dae]">
+        <select
+          id="learningInterest"
+          className="h-full w-full appearance-none rounded-xl bg-transparent px-4 pr-12 text-base leading-6 text-[#181818] outline-none invalid:text-[#979797]"
+          {...register}
+        >
+          <option value="">Select</option>
+          {learningOptions.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </select>
+        <span
+          className="pointer-events-none absolute right-4 top-1/2 flex size-6 -translate-y-1/2 items-center justify-center text-[#303030]"
+          aria-hidden="true"
+        >
+          <ChevronDownIcon />
+        </span>
+      </div>
+      {error ? <p className="text-sm leading-5 text-[#e30202]">{error}</p> : null}
     </div>
+  );
+}
+
+function IconSvg({ children }: { children: ReactNode }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      {children}
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <IconSvg>
+      <path
+        d="M12 12C14.3012 12 16.1667 10.1345 16.1667 7.83333C16.1667 5.53215 14.3012 3.66667 12 3.66667C9.69882 3.66667 7.83333 5.53215 7.83333 7.83333C7.83333 10.1345 9.69882 12 12 12Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M4.875 20.3333C4.875 17.125 8.06667 14.5417 12 14.5417C15.9333 14.5417 19.125 17.125 19.125 20.3333"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </IconSvg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <IconSvg>
+      <path
+        d="M12 13.4292C13.7241 13.4292 15.1217 12.0316 15.1217 10.3075C15.1217 8.58343 13.7241 7.18584 12 7.18584C10.2759 7.18584 8.87833 8.58343 8.87833 10.3075C8.87833 12.0316 10.2759 13.4292 12 13.4292Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M3.62001 8.49C5.59001 -0.17 18.42 -0.16 20.38 8.5C21.53 13.58 18.37 17.88 15.6 20.54C13.59 22.48 10.41 22.48 8.39001 20.54C5.63001 17.88 2.47001 13.57 3.62001 8.49Z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+      />
+    </IconSvg>
+  );
+}
+
+function GalleryAddIcon() {
+  return (
+    <IconSvg>
+      <path
+        d="M9 10C10.1046 10 11 9.10457 11 8C11 6.89543 10.1046 6 9 6C7.89543 6 7 6.89543 7 8C7 9.10457 7.89543 10 9 10Z"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M13 2H9C4 2 2 4 2 9V15C2 20 4 22 9 22H15C20 22 22 20 22 15V10"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M16 5H22"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M19 2V8"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+      />
+      <path
+        d="M2.67 18.95L7.6 15.64C8.39 15.11 9.53 15.17 10.24 15.78L10.57 16.07C11.35 16.74 12.61 16.74 13.39 16.07L17.55 12.5C18.33 11.83 19.59 11.83 20.37 12.5L22 13.9"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </IconSvg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <IconSvg>
+      <path
+        d="M19.92 8.95L13.4 15.47C12.63 16.24 11.37 16.24 10.6 15.47L4.08 8.95"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </IconSvg>
   );
 }

@@ -2,16 +2,16 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { FormEvent } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
+import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import {
   loginSchema,
   type LoginFormValues,
 } from "@/features/auth/schemas/login-schema";
-
-type LoginFormErrors = Partial<Record<keyof LoginFormValues, string>>;
 
 const initialValues: LoginFormValues = {
   email: "",
@@ -20,49 +20,23 @@ const initialValues: LoginFormValues = {
 };
 
 export function LoginScreen() {
-  const [values, setValues] = useState<LoginFormValues>(initialValues);
-  const [errors, setErrors] = useState<LoginFormErrors>({});
   const [showPassword, setShowPassword] = useState(false);
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: initialValues,
+  });
+  const rememberMe = useWatch({ control, name: "rememberMe" });
 
-  function updateValue<TKey extends keyof LoginFormValues>(
-    key: TKey,
-    value: LoginFormValues[TKey],
-  ) {
-    setValues((currentValues) => ({ ...currentValues, [key]: value }));
-    setErrors((currentErrors) => ({ ...currentErrors, [key]: undefined }));
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const result = loginSchema.safeParse(values);
-
-    if (!result.success) {
-      setErrors(
-        result.error.issues.reduce<LoginFormErrors>((nextErrors, issue) => {
-          const field = issue.path[0];
-
-          if (
-            field === "email" ||
-            field === "password" ||
-            field === "rememberMe"
-          ) {
-            nextErrors[field] = issue.message;
-          }
-
-          return nextErrors;
-        }, {}),
-      );
-      return;
-    }
-
-    setErrors({});
-  }
+  function submitLogin() {}
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
-      <BackgroundPanel className="absolute inset-0 hidden md:block lg:hidden" />
-      <BackgroundPanel className="relative hidden min-h-screen lg:block" />
+      <AuthBackgroundPanels />
 
       <section
         className="relative z-10 flex min-h-screen justify-center px-4 py-[96px] md:items-center md:px-6 md:py-10 lg:bg-[#f8f9ff] lg:px-8"
@@ -82,7 +56,7 @@ export function LoginScreen() {
 
           <form
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(submitLogin)}
             className="mt-[47px] flex flex-col gap-8 md:mt-6 md:gap-10 lg:mt-10"
           >
             <div className="flex flex-col gap-6">
@@ -93,30 +67,22 @@ export function LoginScreen() {
               <div className="flex flex-col gap-4">
                 <InputField
                   id="email"
-                  name="email"
                   label="Email"
                   type="email"
                   leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
                   placeholder="Enter your email"
-                  value={values.email}
-                  error={errors.email}
-                  onChange={(event) =>
-                    updateValue("email", event.currentTarget.value)
-                  }
+                  error={errors.email?.message}
+                  {...register("email")}
                 />
 
                 <InputField
                   id="password"
-                  name="password"
                   label="Password"
                   type={showPassword ? "text" : "password"}
                   leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Enter your password"
-                  value={values.password}
-                  error={errors.password}
-                  onChange={(event) =>
-                    updateValue("password", event.currentTarget.value)
-                  }
+                  error={errors.password?.message}
+                  {...register("password")}
                   trailing={
                     <button
                       type="button"
@@ -148,15 +114,12 @@ export function LoginScreen() {
                   <label className="flex min-w-[125px] items-center gap-2 text-base leading-6 text-[#303030] md:text-[#2c2c2c]">
                     <input
                       type="checkbox"
-                      checked={values.rememberMe}
-                      onChange={(event) =>
-                        updateValue("rememberMe", event.currentTarget.checked)
-                      }
                       className="peer sr-only"
+                      {...register("rememberMe")}
                     />
                     <span
                       className={`flex size-6 shrink-0 items-center justify-center rounded border-2 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#003dae] ${
-                        values.rememberMe
+                        rememberMe
                           ? "border-[#003dae] bg-[#003dae] text-white"
                           : "border-[#cbcbcb] bg-white text-transparent"
                       }`}
@@ -221,22 +184,6 @@ export function LoginScreen() {
 
 function AuthFieldIcon({ src }: { src: string }) {
   return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
-}
-
-function BackgroundPanel({ className }: { className: string }) {
-  return (
-    <div className={className} aria-hidden="true">
-      <Image
-        src="/images/auth-background.png"
-        alt=""
-        fill
-        priority
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 to-black/40" />
-    </div>
-  );
 }
 
 type SocialButtonProps = {

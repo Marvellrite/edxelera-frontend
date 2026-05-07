@@ -1,112 +1,180 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import type { FormEvent } from "react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import type { ClipboardEvent, KeyboardEvent } from "react";
+import { useRef } from "react";
+import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { InputField } from "@/components/ui/input";
+import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
 
-type VerifyEmailFormErrors = Partial<Record<keyof VerifyEmailFormValues, string>>;
-
 const initialValues: VerifyEmailFormValues = {
   code: "",
 };
 
-export function VerifyEmailScreen() {
-  const [values, setValues] = useState<VerifyEmailFormValues>(initialValues);
-  const [errors, setErrors] = useState<VerifyEmailFormErrors>({});
+const codeLength = 6;
 
-  function updateCode(code: string) {
-    setValues({ code: code.replace(/\D/g, "").slice(0, 6) });
-    setErrors({});
+export function VerifyEmailScreen() {
+  const {
+    clearErrors,
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue,
+  } = useForm<VerifyEmailFormValues>({
+    resolver: zodResolver(verifyEmailSchema),
+    defaultValues: initialValues,
+  });
+  const codeInputRefs = useRef<Array<HTMLInputElement | null>>([]);
+  const code = useWatch({ control, name: "code" });
+
+  function updateCode(nextCode: string, focusIndex?: number) {
+    setValue("code", nextCode.slice(0, codeLength), {
+      shouldDirty: true,
+      shouldTouch: true,
+    });
+    clearErrors("code");
+
+    if (typeof focusIndex === "number") {
+      codeInputRefs.current[focusIndex]?.focus();
+    }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
+  function updateCodeAtIndex(index: number, rawValue: string) {
+    const digits = rawValue.replace(/\D/g, "");
 
-    const result = verifyEmailSchema.safeParse(values);
-
-    if (!result.success) {
-      setErrors({
-        code: result.error.issues[0]?.message,
-      });
+    if (!digits) {
+      updateCode(replaceCodeDigit(code, index, ""));
       return;
     }
 
-    setErrors({});
+    const codeDigits = code.padEnd(codeLength, " ").split("");
+
+    digits
+      .slice(0, codeLength - index)
+      .split("")
+      .forEach((digit, digitIndex) => {
+        codeDigits[index + digitIndex] = digit;
+      });
+
+    const nextCode = codeDigits.join("").trimEnd();
+    const nextFocusIndex = Math.min(index + digits.length, codeLength - 1);
+    updateCode(nextCode, nextFocusIndex);
   }
+
+  function handleCodePaste(event: ClipboardEvent<HTMLInputElement>) {
+    event.preventDefault();
+    updateCode(
+      event.clipboardData.getData("text").replace(/\D/g, ""),
+      codeLength - 1,
+    );
+  }
+
+  function handleCodeKeyDown(
+    index: number,
+    event: KeyboardEvent<HTMLInputElement>,
+  ) {
+    if (event.key === "Backspace" && !code[index] && index > 0) {
+      codeInputRefs.current[index - 1]?.focus();
+    }
+  }
+
+  function submitVerification() {}
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
-      <BackgroundPanel className="absolute inset-0 hidden md:block lg:hidden" />
-      <BackgroundPanel className="relative hidden min-h-screen lg:block" />
+      <AuthBackgroundPanels />
 
       <section
         className="relative z-10 flex min-h-screen justify-center px-4 py-[96px] md:items-center md:px-6 md:py-10 lg:bg-[#f8f9ff] lg:px-8"
         aria-label="Verify email"
       >
-        <div className="w-full max-w-[396px] md:max-w-[469px] md:rounded-[20px] md:bg-[#f3f3f3] md:p-6 lg:max-w-[444px]">
+        <div className="w-full max-w-[793px] md:rounded-[20px] md:bg-[#f3f3f3] md:p-6 lg:max-w-[560px] xl:max-w-[640px]">
           <div className="flex justify-center">
-            <Image
-              src="/logos/edxelera-logo-light.svg"
-              alt="EdXelera"
-              width={215}
-              height={40}
-              priority
-              className="h-10 w-[215px]"
-            />
+            <EdxeleraMark />
           </div>
 
           <form
             noValidate
-            onSubmit={handleSubmit}
-            className="mt-[47px] flex flex-col gap-8 md:mt-10"
+            onSubmit={handleSubmit(submitVerification)}
+            className="mt-[108px] flex flex-col gap-[59px] md:mt-20 md:gap-12 lg:mt-16"
           >
-            <div className="flex flex-col gap-6">
-              <div className="flex flex-col gap-3">
-                <h1 className="text-[32px] font-semibold leading-10 tracking-normal text-[#0c0c0c] md:font-medium md:leading-[48px] md:text-[#040506]">
-                  Verify email
-                </h1>
-                <p className="text-base leading-6 text-[#646464]">
-                  Enter the 6-digit code sent to your email address.
-                </p>
+            <div className="flex flex-col gap-20 md:gap-14 lg:gap-12">
+              <div className="flex flex-col gap-[74px] md:gap-12 lg:gap-10">
+                <div className="flex flex-col gap-16 md:gap-10">
+                  <h1 className="text-[40px] font-semibold leading-[48px] tracking-normal text-[#040506] md:text-[48px] md:leading-[58px] lg:text-[44px] lg:leading-[54px]">
+                    OTP Verification
+                  </h1>
+                  <p className="max-w-[708px] text-[28px] font-semibold leading-[48px] text-[#040506] md:text-[30px] lg:text-[24px] lg:leading-9">
+                    Enter the 6 digit OTP sent to your email to reset your
+                    password
+                  </p>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <div
+                    className="grid grid-cols-6 gap-[14px] md:gap-4"
+                    aria-label="6 digit verification code"
+                  >
+                    {Array.from({ length: codeLength }, (_, index) => (
+                      <input
+                        key={index}
+                        ref={(element) => {
+                          codeInputRefs.current[index] = element;
+                        }}
+                        id={index === 0 ? "code" : undefined}
+                        name={index === 0 ? "code" : undefined}
+                        type="text"
+                        inputMode="numeric"
+                        autoComplete={index === 0 ? "one-time-code" : "off"}
+                        aria-label={`Digit ${index + 1}`}
+                        value={code[index]?.trim() ?? ""}
+                        maxLength={1}
+                        onChange={(event) =>
+                          updateCodeAtIndex(index, event.currentTarget.value)
+                        }
+                        onKeyDown={(event) => handleCodeKeyDown(index, event)}
+                        onPaste={handleCodePaste}
+                        className="aspect-square min-w-0 rounded-full border border-[#cbcbcb] bg-white text-center text-[32px] font-semibold leading-none text-[#181818] outline-none transition-colors focus:border-[#003dae] focus:ring-2 focus:ring-[#003dae] md:text-[40px] lg:text-[32px]"
+                      />
+                    ))}
+                  </div>
+                  {errors.code ? (
+                    <p className="text-sm leading-5 text-[#e30202]">
+                      {errors.code.message}
+                    </p>
+                  ) : null}
+                </div>
               </div>
 
-              <InputField
-                id="code"
-                name="code"
-                label="Verification Code"
-                inputMode="numeric"
-                autoComplete="one-time-code"
-                leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
-                value={values.code}
-                placeholder="Enter verification code"
-                error={errors.code}
-                onChange={(event) => updateCode(event.currentTarget.value)}
-              />
-
-              <Button type="submit" fullWidth>
-                Verify Email
+              <Button
+                type="submit"
+                fullWidth
+                className="h-[116px] rounded-full text-[36px] font-semibold leading-[54px] md:h-20 md:text-3xl lg:h-16 lg:text-2xl"
+              >
+                Verify
               </Button>
             </div>
 
-            <div className="flex flex-col items-center gap-5 text-center">
-              <p className="text-base leading-6 text-[#494949]">
-                Didn&apos;t receive a code?{" "}
+            <div className="flex flex-col items-center gap-8 text-center md:gap-6">
+              <p className="text-[32px] font-semibold leading-[38px] text-[#494949] md:text-2xl lg:text-xl">
+                Didn&apos;t see code?{" "}
                 <button
                   type="button"
-                  className="font-semibold text-[#003dae] md:font-medium md:text-[#001146]"
+                  className="font-semibold text-[#003dae] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 >
-                  Resend
+                  Resend Code
                 </button>
               </p>
-              <Link href="/auth" className="text-base leading-6 text-[#303030]">
-                Back to login
+              <Link
+                href="/auth"
+                className="text-[32px] font-semibold leading-[38px] text-[#003dae] focus-visible:rounded-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae] md:text-2xl lg:text-xl"
+              >
+                Login with password
               </Link>
             </div>
           </form>
@@ -116,22 +184,33 @@ export function VerifyEmailScreen() {
   );
 }
 
-function AuthFieldIcon({ src }: { src: string }) {
-  return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
+function replaceCodeDigit(code: string, index: number, digit: string) {
+  const codeDigits = code.padEnd(codeLength, " ").split("");
+  codeDigits[index] = digit || " ";
+  return codeDigits.join("").trimEnd();
 }
 
-function BackgroundPanel({ className }: { className: string }) {
+function EdxeleraMark() {
   return (
-    <div className={className} aria-hidden="true">
-      <Image
-        src="/images/auth-background.png"
-        alt=""
-        fill
-        priority
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover"
+    <svg
+      width="101"
+      height="72"
+      viewBox="0 0 110 79"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      role="img"
+      aria-label="EdXelera"
+      className="h-[72px] w-[101px] md:h-16 md:w-[98px]"
+    >
+      <path d="M70 8H86L110 39.5L86 71H70L92.5 39.5L70 8Z" fill="#001146" />
+      <path
+        d="M0 31.5H43C48.247 31.5 52.5 35.753 52.5 41C52.5 46.247 48.247 50.5 43 50.5H0V31.5Z"
+        fill="#001146"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 to-black/40" />
-    </div>
+      <path
+        d="M74 39.5C74 58.554 58.554 74 39.5 74C20.446 74 5 58.554 5 39.5C5 20.446 20.446 5 39.5 5C55.924 5 69.666 16.485 73.126 31.856H57.431C54.514 24.71 47.502 19.667 39.5 19.667C28.546 19.667 19.667 28.546 19.667 39.5C19.667 50.454 28.546 59.333 39.5 59.333C47.502 59.333 54.514 54.29 57.431 47.144H34.5V31.856H73.126C73.701 34.339 74 36.895 74 39.5Z"
+        fill="#001146"
+      />
+    </svg>
   );
 }

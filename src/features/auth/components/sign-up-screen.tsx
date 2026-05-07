@@ -2,16 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import type { FormEvent } from "react";
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
+import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import {
   signUpSchema,
   type SignUpFormValues,
 } from "@/features/auth/schemas/sign-up-schema";
-
-type SignUpFormErrors = Partial<Record<keyof SignUpFormValues, string>>;
 
 const initialValues: SignUpFormValues = {
   fullName: "",
@@ -21,49 +20,20 @@ const initialValues: SignUpFormValues = {
 };
 
 export function SignUpScreen() {
-  const [values, setValues] = useState<SignUpFormValues>(initialValues);
-  const [errors, setErrors] = useState<SignUpFormErrors>({});
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+  } = useForm<SignUpFormValues>({
+    resolver: zodResolver(signUpSchema),
+    defaultValues: initialValues,
+  });
 
-  function updateValue<TKey extends keyof SignUpFormValues>(
-    key: TKey,
-    value: SignUpFormValues[TKey],
-  ) {
-    setValues((currentValues) => ({ ...currentValues, [key]: value }));
-    setErrors((currentErrors) => ({ ...currentErrors, [key]: undefined }));
-  }
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const result = signUpSchema.safeParse(values);
-
-    if (!result.success) {
-      setErrors(
-        result.error.issues.reduce<SignUpFormErrors>((nextErrors, issue) => {
-          const field = issue.path[0];
-
-          if (
-            field === "fullName" ||
-            field === "email" ||
-            field === "password" ||
-            field === "confirmPassword"
-          ) {
-            nextErrors[field] = issue.message;
-          }
-
-          return nextErrors;
-        }, {}),
-      );
-      return;
-    }
-
-    setErrors({});
-  }
+  function submitSignUp() {}
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-white text-[#181818] md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
-      <BackgroundPanel className="absolute inset-0 hidden md:block lg:hidden" />
-      <BackgroundPanel className="relative hidden min-h-screen lg:block" />
+      <AuthBackgroundPanels imageSrc="/images/auth-sign-up-background.png" />
 
       <section
         className="relative z-10 flex min-h-screen justify-center px-4 py-12 md:items-center md:px-6 md:py-10 lg:bg-[#f8f9ff] lg:px-8"
@@ -83,7 +53,7 @@ export function SignUpScreen() {
 
           <form
             noValidate
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(submitSignUp)}
             className="mt-[47px] flex flex-col gap-6 md:mt-6"
           >
             <div className="flex flex-col gap-6">
@@ -94,58 +64,42 @@ export function SignUpScreen() {
               <div className="flex flex-col gap-4">
                 <InputField
                   id="fullName"
-                  name="fullName"
                   label="Full Name"
                   type="text"
                   leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
                   placeholder="Enter your full name"
-                  value={values.fullName}
-                  error={errors.fullName}
-                  onChange={(event) =>
-                    updateValue("fullName", event.currentTarget.value)
-                  }
+                  error={errors.fullName?.message}
+                  {...register("fullName")}
                 />
 
                 <InputField
                   id="email"
-                  name="email"
                   label="Email"
                   type="email"
                   leading={<AuthFieldIcon src="/icons/auth-sms.svg" />}
                   placeholder="Enter your email"
-                  value={values.email}
-                  error={errors.email}
-                  onChange={(event) =>
-                    updateValue("email", event.currentTarget.value)
-                  }
+                  error={errors.email?.message}
+                  {...register("email")}
                 />
 
                 <InputField
                   id="password"
-                  name="password"
                   label="Create Password"
                   type="password"
                   leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Create Password"
-                  value={values.password}
-                  error={errors.password}
-                  onChange={(event) =>
-                    updateValue("password", event.currentTarget.value)
-                  }
+                  error={errors.password?.message}
+                  {...register("password")}
                 />
 
                 <InputField
                   id="confirmPassword"
-                  name="confirmPassword"
                   label="Confirm Password"
                   type="password"
                   leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Confirm Password"
-                  value={values.confirmPassword}
-                  error={errors.confirmPassword}
-                  onChange={(event) =>
-                    updateValue("confirmPassword", event.currentTarget.value)
-                  }
+                  error={errors.confirmPassword?.message}
+                  {...register("confirmPassword")}
                 />
               </div>
 
@@ -212,22 +166,6 @@ export function SignUpScreen() {
 
 function AuthFieldIcon({ src }: { src: string }) {
   return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
-}
-
-function BackgroundPanel({ className }: { className: string }) {
-  return (
-    <div className={className} aria-hidden="true">
-      <Image
-        src="/images/auth-sign-up-background.png"
-        alt=""
-        fill
-        priority
-        sizes="(min-width: 1024px) 50vw, 100vw"
-        className="object-cover"
-      />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/65 to-black/40" />
-    </div>
-  );
 }
 
 type SocialButtonProps = {

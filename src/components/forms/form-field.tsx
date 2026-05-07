@@ -19,7 +19,9 @@ export function FormField({
 }: FormFieldProps) {
   return (
     <div className="grid gap-2">
-      <FieldLabel type={labelType}>{label}</FieldLabel>
+      <FieldLabel showHelpIcon={false} type={labelType}>
+        {label}
+      </FieldLabel>
       {children}
       {hint ? <span className="text-xs font-normal text-zinc-500">{hint}</span> : null}
     </div>

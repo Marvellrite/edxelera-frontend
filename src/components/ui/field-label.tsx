@@ -10,6 +10,7 @@ type FieldLabelProps = {
   className?: string;
   helpIcon?: ReactNode;
   optionalText?: string;
+  showHelpIcon?: boolean;
   type?: FieldLabelType;
 } & ComponentPropsWithoutRef<"label">;
 
@@ -18,6 +19,7 @@ export function FieldLabel({
   className,
   helpIcon = <MessageQuestionIcon />,
   optionalText = "(Optional)",
+  showHelpIcon = false,
   type = "none",
   ...props
 }: FieldLabelProps) {
@@ -38,7 +40,7 @@ export function FieldLabel({
         </span>
       ) : null}
       <span>{children}</span>
-      {helpIcon ? (
+      {showHelpIcon ? (
         <span
           aria-hidden="true"
           className="flex size-6 shrink-0 items-center justify-center text-[#003dae] [--stroke-0:currentColor] [&_svg]:size-6"
