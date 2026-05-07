@@ -27,13 +27,11 @@ type Stage = "email" | "otp" | "reset";
 
 export function ForgottenPasswordScreen() {
   const router = useRouter();
-  const [stage, setStage] = useState<Stage>("reset");
+  const [stage, setStage] = useState<Stage>("email");
   const [email, setEmail] = useState("");
   const [otpToken, setOtpToken] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const emailForm = useForm<ForgotPasswordEmailValues>({
     resolver: zodResolver(forgotPasswordEmailSchema),
@@ -242,10 +240,9 @@ export function ForgottenPasswordScreen() {
             <InputField
               id="password"
               label="Password"
-              type={showPassword ? "text" : "password"}
+              type="password"
               placeholder="Enter new password"
               leading={<Image src="/icons/auth-lock.svg" alt="" width={24} height={24} />}
-              trailing={<button type="button" onClick={() => setShowPassword((v) => !v)}>{showPassword ? "Hide" : "Show"}</button>}
               error={resetForm.formState.errors.password?.message}
               {...resetForm.register("password")}
             />
@@ -253,10 +250,9 @@ export function ForgottenPasswordScreen() {
             <InputField
               id="confirmPassword"
               label="Confirm Password"
-              type={showConfirmPassword ? "text" : "password"}
+              type="password"
               placeholder="Confirm Password"
               leading={<Image src="/icons/auth-lock.svg" alt="" width={24} height={24} />}
-              trailing={<button type="button" onClick={() => setShowConfirmPassword((v) => !v)}>{showConfirmPassword ? "Hide" : "Show"}</button>}
               error={resetForm.formState.errors.confirmPassword?.message}
               {...resetForm.register("confirmPassword")}
             />

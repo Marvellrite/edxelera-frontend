@@ -1,3 +1,7 @@
+"use client";
+
+import Image from "next/image";
+import { useState } from "react";
 import type {
   CSSProperties,
   InputHTMLAttributes,
@@ -55,8 +59,13 @@ export function Input({
   disabled,
   value,
   defaultValue,
+  type,
   ...props
 }: InputHTMLAttributes<HTMLInputElement>) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isPasswordField = type === "password";
+  const inputType = isPasswordField && isPasswordVisible ? "text" : type;
+
   return (
     <InputShell
       disabled={disabled}
@@ -65,12 +74,21 @@ export function Input({
       className={className}
     >
       <input
+        type={inputType}
         disabled={disabled}
         value={value}
         defaultValue={defaultValue}
         className={inputControlClassName}
         {...props}
       />
+      {isPasswordField ? (
+        <InputSlot>
+          <PasswordVisibilityButton
+            isVisible={isPasswordVisible}
+            onToggle={() => setIsPasswordVisible((isVisible) => !isVisible)}
+          />
+        </InputSlot>
+      ) : null}
     </InputShell>
   );
 }
@@ -107,9 +125,22 @@ export function InputField({
   fieldClassName,
   inputClassName,
   disabled,
+  type,
   "aria-describedby": ariaDescribedBy,
   ...props
 }: InputFieldProps) {
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const isPasswordField = type === "password";
+  const inputType =
+    isPasswordField && isPasswordVisible ? "text" : type;
+  const resolvedTrailing =
+    trailing ??
+    (isPasswordField ? (
+      <PasswordVisibilityButton
+        isVisible={isPasswordVisible}
+        onToggle={() => setIsPasswordVisible((isVisible) => !isVisible)}
+      />
+    ) : null);
   const resolvedState = getResolvedState({
     disabled,
     error,
@@ -145,13 +176,14 @@ export function InputField({
         <InputSlot>{leading}</InputSlot>
         <input
           id={id}
+          type={inputType}
           disabled={disabled}
           aria-invalid={Boolean(error)}
           aria-describedby={cn(ariaDescribedBy, descriptionId)}
           className={cn(inputControlClassName, inputClassName)}
           {...props}
         />
-        <InputSlot>{trailing}</InputSlot>
+        <InputSlot>{resolvedTrailing}</InputSlot>
       </InputShell>
       <FieldMessage
         id={descriptionId}
@@ -291,6 +323,32 @@ function InputSlot({ children }: { children?: ReactNode }) {
 
 const inputControlClassName =
   "relative z-[1] min-w-0 flex-1 bg-transparent text-base leading-6 outline-none disabled:cursor-not-allowed";
+
+function PasswordVisibilityButton({
+  isVisible,
+  onToggle,
+}: {
+  isVisible: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className="flex size-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
+      aria-label={isVisible ? "Hide password" : "Show password"}
+      aria-pressed={isVisible}
+    >
+      <Image
+        src={isVisible ? "/icons/auth-eye-slash.svg" : "/icons/auth-eye.svg"}
+        alt=""
+        width={24}
+        height={24}
+        aria-hidden="true"
+      />
+    </button>
+  );
+}
 
 function getResolvedState({
   disabled,

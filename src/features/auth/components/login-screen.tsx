@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
@@ -21,7 +20,6 @@ const initialValues: LoginFormValues = {
 };
 
 export function LoginScreen() {
-  const [showPassword, setShowPassword] = useState(false);
   const {
     control,
     formState: { errors },
@@ -72,34 +70,11 @@ export function LoginScreen() {
                 <InputField
                   id="password"
                   label="Password"
-                  type={showPassword ? "text" : "password"}
+                  type="password"
                   leading={<AuthFieldIcon src="/icons/auth-lock.svg" />}
                   placeholder="Enter your password"
                   error={errors.password?.message}
                   {...register("password")}
-                  trailing={
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword((isVisible) => !isVisible)}
-                      className="flex size-6 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
-                      aria-label={
-                        showPassword ? "Hide password" : "Show password"
-                      }
-                      aria-pressed={showPassword}
-                    >
-                      <Image
-                        src={
-                          showPassword
-                            ? "/icons/auth-eye.svg"
-                            : "/icons/auth-eye-slash.svg"
-                        }
-                        alt=""
-                        width={24}
-                        height={24}
-                        aria-hidden="true"
-                      />
-                    </button>
-                  }
                 />
               </div>
 
