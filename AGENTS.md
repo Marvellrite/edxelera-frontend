@@ -176,6 +176,18 @@ Do not store server data in a global client store unless there is a clear reason
 
 - Use Tailwind CSS for styling.
 - Keep global styles in `src/app/globals.css`.
+- Use the semantic color tokens exposed through `src/app/globals.css` when styling components.
+  Prefer Tailwind classes such as `bg-background`, `text-foreground`, `bg-primary`,
+  `text-primary-foreground`, `bg-card`, `text-card-foreground`, `border-border`, `bg-muted`,
+  `text-muted-foreground`, `ring-ring`, `bg-destructive`, `bg-success`, and `bg-warning` over
+  raw hex values or arbitrary color classes.
+- Use palette color classes such as `blue-600`, `neutral-300`, or `red-600` only when no semantic
+  token accurately describes the intended UI role. Before introducing a hardcoded color value,
+  check `src/app/globals.css`, `src/styles/theme.css`, and `src/styles/root.css` for an existing
+  semantic or palette variable that already represents that color.
+- Hardcoded color values such as `#003dae`, `rgb(...)`, `hsl(...)`, or arbitrary Tailwind color
+  values are allowed only when the intended color is not already represented by an existing
+  semantic color token or palette variable.
 - Extract repeated visual patterns into components.
 - Avoid inline styles unless a runtime value requires them.
 - Maintain consistent spacing, typography, and interaction states.

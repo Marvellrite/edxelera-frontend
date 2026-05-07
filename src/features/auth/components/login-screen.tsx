@@ -3,8 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { InputField } from "@/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
@@ -21,7 +22,6 @@ const initialValues: LoginFormValues = {
 
 export function LoginScreen() {
   const {
-    control,
     formState: { errors },
     handleSubmit,
     register,
@@ -29,7 +29,6 @@ export function LoginScreen() {
     resolver: zodResolver(loginSchema),
     defaultValues: initialValues,
   });
-  const rememberMe = useWatch({ control, name: "rememberMe" });
 
   function submitLogin() {}
 
@@ -80,25 +79,13 @@ export function LoginScreen() {
 
               <div className="flex flex-col gap-6 md:gap-5">
                 <div className="flex items-start justify-between gap-4">
-                  <label className="flex min-w-[125px] items-center gap-2 text-base leading-6">
-                    <input
-                      type="checkbox"
-                      className="peer sr-only"
-                      {...register("rememberMe")}
-                    />
-                    <span
-                      className={`flex size-6 shrink-0 items-center justify-center rounded border-2 transition-colors peer-focus-visible:outline peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-[#003dae] ${
-                        rememberMe
-                          ? "border-[#003dae] bg-[#003dae]"
-                          : "border-[#cbcbcb] bg-white [&_svg]:opacity-0"
-                      }`}
-                      aria-hidden="true"
-                    >
-                      <CheckIcon />
-                    </span>
+                  <Checkbox
+                    className="min-w-[125px]"
+                    {...register("rememberMe")}
+                  >
                     <span className="md:hidden lg:inline">Remember Me</span>
                     <span className="hidden md:inline lg:hidden">Remember me</span>
-                  </label>
+                  </Checkbox>
 
                   <Link
                     href="/auth/forgotten-password"
@@ -170,25 +157,5 @@ function SocialButton({ iconSrc, label }: SocialButtonProps) {
     >
       <Image src={iconSrc} alt="" width={24} height={24} aria-hidden="true" />
     </Button>
-  );
-}
-
-function CheckIcon() {
-  return (
-    <svg
-      width="10"
-      height="8"
-      viewBox="0 0 10 8"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M1 4L3.5 6.5L9 1"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
