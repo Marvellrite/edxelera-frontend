@@ -4,11 +4,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
+import { OtpInput } from "@/features/auth/components/otp-input";
 import {
   forgotPasswordEmailSchema,
   forgotPasswordOtpSchema,
@@ -48,8 +49,21 @@ export function ForgottenPasswordScreen() {
     defaultValues: { password: "", confirmPassword: "" },
   });
 
-  const otpRefs = useRef<Array<HTMLInputElement | null>>([]);
   const otpValues = useWatch({ control: otpForm.control, name: "otp" });
+  const otpCode = otpValues.join("");
+  const otpError = getOtpErrorMessage(otpForm.formState.errors.otp);
+
+  function updateOtpCode(nextOtp: string) {
+    otpForm.setValue(
+      "otp",
+      Array.from({ length: 6 }, (_, index) => nextOtp[index] ?? ""),
+      {
+        shouldDirty: true,
+        shouldTouch: true,
+      },
+    );
+    otpForm.clearErrors("otp");
+  }
 
   async function submitEmail(values: ForgotPasswordEmailValues) {
     try {
@@ -157,49 +171,11 @@ export function ForgottenPasswordScreen() {
                 </p>
 
                 <div className="flex w-full flex-col items-center gap-10">
-                  <div className="flex w-full flex-col items-start gap-2">
-                    <label className="block text-base leading-6">OTP</label>
-                    <div className="flex h-14 w-full items-start gap-2">
-                      {otpValues.map((digit, index) => (
-                        <input
-                          key={index}
-                          ref={(el) => {
-                            otpRefs.current[index] = el;
-                          }}
-                          value={digit}
-                          inputMode="numeric"
-                          maxLength={1}
-                          aria-label={`OTP digit ${index + 1}`}
-                          className="h-14 min-w-0 flex-1 rounded-xl border border-[#cbcbcb] bg-white p-4 text-center text-xl outline-none transition-colors focus:border-[#003dae]"
-                          onChange={(event) => {
-                            const nextValue = event.target.value
-                              .replace(/\D/g, "")
-                              .slice(-1);
-                            otpForm.setValue(`otp.${index}`, nextValue, {
-                              shouldValidate: true,
-                            });
-                            if (nextValue && index < 5) {
-                              otpRefs.current[index + 1]?.focus();
-                            }
-                          }}
-                          onKeyDown={(event) => {
-                            if (
-                              event.key === "Backspace" &&
-                              !digit &&
-                              index > 0
-                            ) {
-                              otpRefs.current[index - 1]?.focus();
-                            }
-                          }}
-                        />
-                      ))}
-                    </div>
-                    {otpForm.formState.errors.otp && (
-                      <p className="text-sm leading-5">
-                        {otpForm.formState.errors.otp.message}
-                      </p>
-                    )}
-                  </div>
+                  <OtpInput
+                    value={otpCode}
+                    onChange={updateOtpCode}
+                    error={otpError}
+                  />
 
                   <Button
                     type="submit"
@@ -266,5 +242,30 @@ export function ForgottenPasswordScreen() {
         {errorMessage && <p className="mt-4 text-center text-sm">{errorMessage}</p>}
       </section>
     </main>
+  );
+}
+
+function getOtpErrorMessage(error: unknown): string | undefined {
+  if (!error) {
+    return undefined;
+  }
+
+  if (hasMessage(error)) {
+    return error.message;
+  }
+
+  if (Array.isArray(error)) {
+    return error.find(hasMessage)?.message;
+  }
+
+  return undefined;
+}
+
+function hasMessage(value: unknown): value is { message: string } {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "message" in value &&
+    typeof (value as { message?: unknown }).message === "string"
   );
 }

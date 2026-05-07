@@ -1,1 +1,2 @@
 - will check the layout config of the auth screens
+- implement the input + error message combination
