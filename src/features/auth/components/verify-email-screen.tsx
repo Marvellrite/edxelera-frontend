@@ -7,6 +7,7 @@ import { useRef } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
+import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
@@ -95,7 +96,7 @@ export function VerifyEmailScreen() {
       >
         <div className="w-full max-w-[793px] md:rounded-[20px] md:bg-[#f3f3f3] md:p-6 lg:max-w-[560px] xl:max-w-[640px]">
           <div className="flex justify-center">
-            <EdxeleraMark />
+            <AuthLogo className="h-10 w-[232px]" />
           </div>
 
           <form
@@ -190,27 +191,3 @@ function replaceCodeDigit(code: string, index: number, digit: string) {
   return codeDigits.join("").trimEnd();
 }
 
-function EdxeleraMark() {
-  return (
-    <svg
-      width="101"
-      height="72"
-      viewBox="0 0 110 79"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="EdXelera"
-      className="h-[72px] w-[101px] md:h-16 md:w-[98px]"
-    >
-      <path d="M70 8H86L110 39.5L86 71H70L92.5 39.5L70 8Z" fill="#001146" />
-      <path
-        d="M0 31.5H43C48.247 31.5 52.5 35.753 52.5 41C52.5 46.247 48.247 50.5 43 50.5H0V31.5Z"
-        fill="#001146"
-      />
-      <path
-        d="M74 39.5C74 58.554 58.554 74 39.5 74C20.446 74 5 58.554 5 39.5C5 20.446 20.446 5 39.5 5C55.924 5 69.666 16.485 73.126 31.856H57.431C54.514 24.71 47.502 19.667 39.5 19.667C28.546 19.667 19.667 28.546 19.667 39.5C19.667 50.454 28.546 59.333 39.5 59.333C47.502 59.333 54.514 54.29 57.431 47.144H34.5V31.856H73.126C73.701 34.339 74 36.895 74 39.5Z"
-        fill="#001146"
-      />
-    </svg>
-  );
-}

@@ -8,6 +8,7 @@ import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
+import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   loginSchema,
   type LoginFormValues,
@@ -44,14 +45,7 @@ export function LoginScreen() {
       >
         <div className="w-full max-w-[396px] md:max-w-[469px] md:rounded-[20px] md:bg-[#f3f3f3] md:p-6 lg:max-w-[444px]">
           <div className="flex justify-center">
-            <Image
-              src="/logos/edxelera-logo-light.svg"
-              alt="EdXelera"
-              width={215}
-              height={40}
-              priority
-              className="h-10 w-[215px]"
-            />
+            <AuthLogo />
           </div>
 
           <form

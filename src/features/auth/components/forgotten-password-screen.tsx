@@ -21,6 +21,7 @@ import {
   sendForgotPasswordOtp,
   verifyForgotPasswordOtp,
 } from "@/features/auth/services/forgot-password-service";
+import { AuthLogo } from "@/features/auth/components/auth-logo";
 
 type Stage = "email" | "otp" | "reset";
 
@@ -103,13 +104,7 @@ export function ForgottenPasswordScreen() {
     <main className="min-h-screen bg-[#f3f3f3] px-4 py-12 text-[#181818] md:flex md:items-center md:justify-center">
       <section className="mx-auto w-full max-w-[396px]">
         <div className="flex justify-center">
-          <Image
-            src="/logos/edxelera-logo-light.svg"
-            alt="EdXelera"
-            width={215}
-            height={40}
-            priority
-          />
+          <AuthLogo />
         </div>
 
         {stage === "email" && (
