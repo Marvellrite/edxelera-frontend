@@ -1,5 +1,6 @@
 import { apiClient } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/api/endpoints";
+import { uploadFileToS3 } from "@/features/uploads/api/upload-api";
 
 export type SignUpRequest = {
   fullname: string;
@@ -18,6 +19,15 @@ export type OnboardingProfileRequest = {
   location: string;
   secondaryLocation: string;
   learningInterest: string;
+  image: File | null;
+};
+
+type OnboardingProfilePayload = {
+  bio: string;
+  location: string;
+  secondaryLocation: string;
+  learningInterest: string;
+  image: string;
 };
 
 type TokenResponse = {
@@ -48,11 +58,18 @@ export async function verifyEmail(payload: VerifyEmailRequest) {
 export async function updateOnboardingProfile(
   payload: OnboardingProfileRequest,
 ) {
+  const { image, ...profileFields } = payload;
+  const uploadedImageKey = image ? await uploadFileToS3(image, image.name) : "";
 
-  // todo: an upload url will be returned here after using awa implementation to upload the profile image
+  const onboardingPayload: OnboardingProfilePayload = {
+    ...profileFields,
+    image: uploadedImageKey,
+  };
 
-  // apiClient.patch<AuthResponse>(`${apiEndpoints.users}/profile/change-avatar`, payload)
-  return apiClient.patch<AuthResponse>(`${apiEndpoints.users}/profile/edit`, payload);
+  return apiClient.patch<AuthResponse>(
+    `${apiEndpoints.profile}/edit`,
+    onboardingPayload,
+  );
 }
 
 export function getAccessTokenFromResponse(response: TokenResponse) {
