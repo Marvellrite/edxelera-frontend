@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
@@ -11,6 +13,7 @@ import {
   onboardingSchema,
   type OnboardingFormValues,
 } from "@/features/auth/schemas/onboarding-schema";
+import { updateOnboardingProfile } from "@/features/auth/services/auth-service";
 
 const initialValues: OnboardingFormValues = {
   bio: "",
@@ -27,6 +30,9 @@ const learningOptions = [
 ] as const;
 
 export function OnboardingScreen() {
+  const router = useRouter();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
@@ -36,7 +42,18 @@ export function OnboardingScreen() {
     defaultValues: initialValues,
   });
 
-  function submitOnboarding() {}
+  async function submitOnboarding(values: OnboardingFormValues) {
+    try {
+      setIsLoading(true);
+      setErrorMessage(null);
+      await updateOnboardingProfile(values);
+      router.push("/home");
+    } catch {
+      setErrorMessage("Unable to save your profile. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-white md:bg-[#f8f9ff] lg:grid lg:grid-cols-2">
@@ -109,7 +126,7 @@ export function OnboardingScreen() {
               </div>
 
               <div className="flex w-full flex-col gap-2">
-                <Button type="submit" fullWidth>
+                <Button type="submit" fullWidth isLoading={isLoading}>
                   Continue
                 </Button>
                 <button
@@ -120,6 +137,12 @@ export function OnboardingScreen() {
                 </button>
               </div>
             </div>
+
+            {errorMessage ? (
+              <p className="text-center text-sm leading-5 text-destructive">
+                {errorMessage}
+              </p>
+            ) : null}
           </form>
         </div>
       </section>

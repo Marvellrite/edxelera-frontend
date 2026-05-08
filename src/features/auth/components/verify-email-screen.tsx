@@ -1,6 +1,8 @@
 "use client";
 
+import { useRouter, useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/features/auth/components/otp-input";
@@ -8,6 +10,11 @@ import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
+import {
+  getAccessTokenFromResponse,
+  verifyEmail,
+} from "@/features/auth/services/auth-service";
+import { setAccessTokenCookie } from "@/lib/auth-cookies";
 import { AuthLogo } from "./auth-logo";
 
 const initialValues: VerifyEmailFormValues = {
@@ -15,6 +22,10 @@ const initialValues: VerifyEmailFormValues = {
 };
 
 export function VerifyEmailScreen() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     clearErrors,
     control,
@@ -35,7 +46,35 @@ export function VerifyEmailScreen() {
     clearErrors("code");
   }
 
-  function submitVerification() {}
+  async function submitVerification(values: VerifyEmailFormValues) {
+    const email =
+      searchParams.get("email") ??
+      sessionStorage.getItem("pending_verification_email") ??
+      "";
+
+    if (!email) {
+      setErrorMessage("Please sign up again so we can verify your email.");
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setErrorMessage(null);
+      const response = await verifyEmail({ email, otp: values.code });
+      const accessToken = getAccessTokenFromResponse(response);
+
+      if (accessToken) {
+        setAccessTokenCookie(accessToken);
+      }
+
+      sessionStorage.removeItem("pending_verification_email");
+      router.push("/auth/onboarding");
+    } catch {
+      setErrorMessage("Unable to verify this code. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <main className="min-h-screen bg-card text-foreground">
@@ -68,11 +107,17 @@ export function VerifyEmailScreen() {
                   error={errors.code?.message}
                 />
 
-                <Button type="submit" fullWidth>
+                <Button type="submit" fullWidth isLoading={isLoading}>
                   Verify
                 </Button>
               </div>
             </div>
+
+            {errorMessage ? (
+              <p className="text-center text-sm leading-5 text-destructive">
+                {errorMessage}
+              </p>
+            ) : null}
 
             <p className="text-center text-base leading-6 text-neutral-600">
               Didn&apos;t receive the code?{" "}
