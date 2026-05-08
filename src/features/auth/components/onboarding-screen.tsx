@@ -2,8 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
-import type { ReactNode } from "react";
+import { useRef, useState } from "react";
+import type { ChangeEvent, ReactNode } from "react";
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { InputField } from "@/components/ui/input";
@@ -13,7 +13,7 @@ import {
   onboardingSchema,
   type OnboardingFormValues,
 } from "@/features/auth/schemas/onboarding-schema";
-import { updateOnboardingProfile } from "@/features/auth/services/auth-service";
+import { updateOnboardingProfile } from "@/features/auth/services/auth.service";
 
 const initialValues: OnboardingFormValues = {
   bio: "",
@@ -31,7 +31,9 @@ const learningOptions = [
 
 export function OnboardingScreen() {
   const router = useRouter();
+  const profileImageInputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {
     formState: { errors },
@@ -46,13 +48,24 @@ export function OnboardingScreen() {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      await updateOnboardingProfile(values);
+      await updateOnboardingProfile({
+        ...values,
+        image: profileImage,
+      });
       router.push("/home");
     } catch {
       setErrorMessage("Unable to save your profile. Please try again.");
     } finally {
       setIsLoading(false);
     }
+  }
+
+  function openProfileImagePicker() {
+    profileImageInputRef.current?.click();
+  }
+
+  function handleProfileImageChange(event: ChangeEvent<HTMLInputElement>) {
+    setProfileImage(event.target.files?.[0] ?? null);
   }
 
   return (
@@ -85,11 +98,26 @@ export function OnboardingScreen() {
 
               <button
                 type="button"
+                onClick={openProfileImagePicker}
+                disabled={isLoading}
                 className="flex size-[88px] items-center justify-center rounded-full bg-[#ebebeb] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 aria-label="Upload profile photo"
               >
                 <GalleryAddIcon />
               </button>
+              <input
+                ref={profileImageInputRef}
+                type="file"
+                accept="image/*"
+                className="sr-only"
+                onChange={handleProfileImageChange}
+                aria-label="Select profile photo"
+              />
+              {profileImage ? (
+                <p className="-mt-8 text-center text-sm leading-5 text-muted-foreground">
+                  {profileImage.name}
+                </p>
+              ) : null}
 
               <div className="flex w-full flex-col gap-4">
                 <InputField

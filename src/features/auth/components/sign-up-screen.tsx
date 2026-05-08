@@ -14,7 +14,7 @@ import {
   signUpSchema,
   type SignUpFormValues,
 } from "@/features/auth/schemas/sign-up-schema";
-import { signUp } from "@/features/auth/services/auth-service";
+import { signUp } from "@/features/auth/services/auth.service";
 
 const initialValues: SignUpFormValues = {
   fullName: "",

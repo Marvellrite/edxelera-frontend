@@ -13,7 +13,7 @@ import {
 import {
   getAccessTokenFromResponse,
   verifyEmail,
-} from "@/features/auth/services/auth-service";
+} from "@/features/auth/services/auth.service";
 import { setAccessTokenCookie } from "@/lib/auth-cookies";
 import { AuthLogo } from "./auth-logo";
 
