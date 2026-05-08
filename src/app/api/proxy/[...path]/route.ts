@@ -60,6 +60,7 @@ async function createBackendUrl(req: NextRequest, context: ProxyRouteContext) {
   );
 
   backendUrl.search = req.nextUrl.search;
+  console.log('backendUrl ->', backendUrl)
 
   return backendUrl;
 }

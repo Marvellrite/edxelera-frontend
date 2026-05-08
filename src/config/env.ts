@@ -14,7 +14,7 @@ const envSchema = z.object({
 
 const parsedEnv = envSchema.safeParse({
   NEXT_PUBLIC_BACKEND_URL: process.env.NEXT_PUBLIC_BACKEND_URL,
-  NEXT_PUBLIC_API_URL: "/api/proxy/api/v1",
+  NEXT_PUBLIC_API_URL: frontendApiUrl,
 });
 
 if (!parsedEnv.success) {
