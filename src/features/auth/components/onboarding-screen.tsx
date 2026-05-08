@@ -13,7 +13,7 @@ import {
   onboardingSchema,
   type OnboardingFormValues,
 } from "@/features/auth/schemas/onboarding-schema";
-import { updateOnboardingProfile } from "@/features/auth/services/auth-service";
+import { updateOnboardingProfile } from "@/features/auth/services/auth.service";
 
 const initialValues: OnboardingFormValues = {
   bio: "",

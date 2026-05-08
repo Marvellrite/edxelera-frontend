@@ -2,7 +2,7 @@ import { apiClient } from "@/lib/api/client";
 
 export type PresignedUploadUrlRequest = {
   fileType: string;
-  title: string;
+  title: string;  // can be name of the course or name of the file
 };
 
 export type PresignedUploadUrlResponse = {

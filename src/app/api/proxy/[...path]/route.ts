@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import env from "@/config/env";
 
 const proxyCookiePath = "/api/proxy";
+const rootPathCookieNames = new Set(["access_token", "reset_token"]);
 
 type ProxyRouteContext = {
   params: Promise<{
@@ -20,12 +21,22 @@ export const runtime = "nodejs";
 const stripDomainFromSetCookie = (setCookie: string) =>
   setCookie.replace(/;\s*domain=[^;]+/gi, "");
 
+const getSetCookieName = (setCookie: string) =>
+  setCookie.split(";", 1)[0]?.split("=", 1)[0]?.trim();
+
+const getCookiePath = (setCookie: string) =>
+  rootPathCookieNames.has(getSetCookieName(setCookie) ?? "")
+    ? "/"
+    : proxyCookiePath;
+
 const rewritePathInSetCookie = (setCookie: string) => {
+  const cookiePath = getCookiePath(setCookie);
+
   if (/;\s*path=/i.test(setCookie)) {
-    return setCookie.replace(/;\s*path=[^;]+/i, `; Path=${proxyCookiePath}`);
+    return setCookie.replace(/;\s*path=[^;]+/i, `; Path=${cookiePath}`);
   }
 
-  return `${setCookie}; Path=${proxyCookiePath}`;
+  return `${setCookie}; Path=${cookiePath}`;
 };
 
 const normalizeSetCookie = (setCookie: string) =>
@@ -60,7 +71,6 @@ async function createBackendUrl(req: NextRequest, context: ProxyRouteContext) {
   );
 
   backendUrl.search = req.nextUrl.search;
-  console.log('backendUrl ->', backendUrl)
 
   return backendUrl;
 }

@@ -22,7 +22,7 @@ import {
   resetForgottenPassword,
   sendForgotPasswordOtp,
   verifyForgotPasswordOtp,
-} from "@/features/auth/services/forgot-password-service";
+} from "@/features/auth/services/otp.service";
 
 type Stage = "email" | "otp" | "reset";
 
@@ -102,7 +102,7 @@ export function ForgottenPasswordScreen() {
       await resetForgottenPassword({
         email,
         otp: otpToken,
-        newPassword: values.password,
+        new_password: values.password,
       });
       router.push("/auth");
     } catch {
