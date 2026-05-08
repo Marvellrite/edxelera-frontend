@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
@@ -23,7 +23,6 @@ const initialValues: VerifyEmailFormValues = {
 
 export function VerifyEmailScreen() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const {
@@ -47,10 +46,7 @@ export function VerifyEmailScreen() {
   }
 
   async function submitVerification(values: VerifyEmailFormValues) {
-    const email =
-      searchParams.get("email") ??
-      sessionStorage.getItem("pending_verification_email") ??
-      "";
+    const email = sessionStorage.getItem("pending_verification_email") ?? "";
 
     if (!email) {
       setErrorMessage("Please sign up again so we can verify your email.");
@@ -60,7 +56,11 @@ export function VerifyEmailScreen() {
     try {
       setIsLoading(true);
       setErrorMessage(null);
-      const response = await verifyEmail({ email, otp: values.code });
+      const response = await verifyEmail({
+        email,
+        otp: values.code,
+        otp_type: "account_verification",
+      });
       const accessToken = getAccessTokenFromResponse(response);
 
       if (accessToken) {

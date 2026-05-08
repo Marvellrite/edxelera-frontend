@@ -10,6 +10,7 @@ export type SignUpRequest = {
 export type VerifyEmailRequest = {
   email: string;
   otp: string;
+  otp_type: "account_verification";
 };
 
 export type OnboardingProfileRequest = {
@@ -39,7 +40,7 @@ export async function signUp(payload: SignUpRequest) {
 
 export async function verifyEmail(payload: VerifyEmailRequest) {
   return apiClient.post<AuthResponse>(
-    `${apiEndpoints.auth}/verify-email`,
+    `${apiEndpoints.auth}/verify-otp`,
     payload,
   );
 }

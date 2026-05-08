@@ -47,7 +47,7 @@ export function SignUpScreen() {
       });
       sessionStorage.setItem("pending_verification_email", values.email);
       router.push(
-        `/auth/verify-email?email=${encodeURIComponent(values.email)}`,
+        `/auth/verify-email`,
       );
     } catch {
       setErrorMessage("Unable to create your account. Please try again.");

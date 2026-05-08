@@ -27,6 +27,7 @@ class ApiClient {
       ...requestOptions,
       headers: {
         "Content-Type": "application/json",
+        "x-client-type": "web",
         ...getAuthHeader(),
         ...this.headers,
         ...headers,
