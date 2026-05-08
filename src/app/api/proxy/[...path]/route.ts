@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const fallbackBackendUrl = "http://192.168.10.20:8000";
+import env from "@/config/env";
+
+const proxyCookiePath = "/api/proxy";
 
 type ProxyRouteContext = {
   params: Promise<{
@@ -17,6 +19,17 @@ export const runtime = "nodejs";
 
 const stripDomainFromSetCookie = (setCookie: string) =>
   setCookie.replace(/;\s*domain=[^;]+/gi, "");
+
+const rewritePathInSetCookie = (setCookie: string) => {
+  if (/;\s*path=/i.test(setCookie)) {
+    return setCookie.replace(/;\s*path=[^;]+/i, `; Path=${proxyCookiePath}`);
+  }
+
+  return `${setCookie}; Path=${proxyCookiePath}`;
+};
+
+const normalizeSetCookie = (setCookie: string) =>
+  rewritePathInSetCookie(stripDomainFromSetCookie(setCookie));
 
 async function proxyRequest(req: NextRequest, context: ProxyRouteContext) {
   const backendUrl = await createBackendUrl(req, context);
@@ -41,11 +54,9 @@ async function proxyRequest(req: NextRequest, context: ProxyRouteContext) {
 
 async function createBackendUrl(req: NextRequest, context: ProxyRouteContext) {
   const { path } = await context.params;
-  const backendBaseUrl =
-    process.env.NEXT_PUBLIC_BACKEND_URL?.trim() || fallbackBackendUrl;
   const backendUrl = new URL(
     path.map(encodeURIComponent).join("/"),
-    ensureTrailingSlash(backendBaseUrl),
+    ensureTrailingSlash(env.backendUrl),
   );
 
   backendUrl.search = req.nextUrl.search;
@@ -65,7 +76,7 @@ function createResponseHeaders(headers: Headers) {
   responseHeaders.delete("set-cookie");
 
   for (const setCookie of getSetCookieHeaders(headers)) {
-    responseHeaders.append("Set-Cookie", stripDomainFromSetCookie(setCookie));
+    responseHeaders.append("Set-Cookie", normalizeSetCookie(setCookie));
   }
 
   return responseHeaders;
