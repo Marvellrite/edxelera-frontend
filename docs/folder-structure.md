@@ -71,14 +71,12 @@ edxelera-frontend/
 │   └── logos/
 ├── src/
 │   ├── app/
-│   ├── components/
 │   ├── config/
 │   ├── features/
-│   ├── hooks/
-│   ├── lib/
+│   ├── shared/
 │   ├── stores/
 │   ├── styles/
-│   └── types/
+│   └── middleware.ts
 ├── next.config.ts
 ├── package.json
 ├── postcss.config.mjs
@@ -267,28 +265,46 @@ src/features/courses/
 └── types.ts
 ```
 
-Use `dto/` for backend request and response contracts, and import those DTOs from feature service
-modules. Keep feature `types.ts` files for UI/domain-only types; do not duplicate API payload
-shapes there.
+Use `src/features/<feature>/dto/` for backend request and response contracts, and import those DTOs
+from feature service modules. Keep `src/features/<feature>/types.ts` files for UI/domain-only
+types; do not duplicate API payload shapes there.
 
-## `src/components`
+## `src/shared`
 
-The `src/components` directory is for reusable components that are not owned by one feature.
+The `src/shared` directory owns reusable code that is not specific to one feature. Shared UI,
+global hooks, infrastructure services, reusable helper modules, shared constants, React Query
+setup, and global types live here.
 
 ```txt
-src/components/
+src/shared/
+├── components/
+├── constants/
+├── hooks/
+├── lib/
+├── react-query/
+├── services/
+├── types/
+└── utils/
+```
+
+### `src/shared/components`
+
+Use this folder for reusable components that are not owned by one feature.
+
+```txt
+src/shared/components/
 ├── forms/
 ├── layout/
 ├── shared/
 └── ui/
 ```
 
-### `src/components/ui`
+#### `src/shared/components/ui`
 
 Use this folder for pure UI primitives.
 
 ```txt
-src/components/ui/
+src/shared/components/ui/
 ├── badge.tsx
 ├── button.tsx
 ├── dropdown.tsx
@@ -298,12 +314,12 @@ src/components/ui/
 └── tabs.tsx
 ```
 
-### `src/components/layout`
+#### `src/shared/components/layout`
 
 Use this folder for shared shell and layout components.
 
 ```txt
-src/components/layout/
+src/shared/components/layout/
 ├── dashboard-layout.tsx
 ├── footer.tsx
 ├── navbar.tsx
@@ -311,12 +327,12 @@ src/components/layout/
 └── sidebar.tsx
 ```
 
-### `src/components/shared`
+#### `src/shared/components/shared`
 
 Use this folder for cross-feature components that contain light product behavior.
 
 ```txt
-src/components/shared/
+src/shared/components/shared/
 ├── course-grid.tsx
 ├── empty-state.tsx
 ├── pagination.tsx
@@ -324,45 +340,105 @@ src/components/shared/
 └── user-avatar.tsx
 ```
 
-### `src/components/forms`
+#### `src/shared/components/forms`
 
 Use this folder for reusable form abstractions.
 
 ```txt
-src/components/forms/
+src/shared/components/forms/
 ├── form-error.tsx
 ├── form-field.tsx
 ├── password-input.tsx
 └── rich-text-editor.tsx
 ```
 
-## `src/lib`
+### `src/shared/lib`
 
-The `src/lib` directory contains application infrastructure and framework-agnostic utilities.
+Use this folder for reusable non-UI helper modules and framework-agnostic shared logic. Route
+helpers and permission helpers belong here.
 
 ```txt
-src/lib/
-├── api/
-│   └── query-client.ts
+src/shared/lib/
 ├── auth.ts
-├── constants.ts
 ├── permissions.ts
 ├── routes.ts
-├── utils.ts
-└── validators.ts
+├── validators.ts
+├── format-date.ts
+├── cn.ts
+└── storage.ts
 ```
 
-## `src/hooks`
+### `src/shared/hooks`
 
 Use this folder for global reusable hooks that are not tied to a specific feature.
 
 ```txt
-src/hooks/
+src/shared/hooks/
 ├── use-debounce.ts
 ├── use-local-storage.ts
 ├── use-media-query.ts
 ├── use-pagination.ts
 └── use-toast.ts
+```
+
+### `src/shared/react-query`
+
+Use this folder for global React Query infrastructure.
+
+```txt
+src/shared/react-query/
+├── provider.tsx
+├── query-client.ts
+└── query-keys.ts
+```
+
+### `src/shared/services`
+
+Use this folder for shared service infrastructure. The centralized Axios API client lives here.
+Feature services should import it instead of creating their own clients.
+
+```txt
+src/shared/services/
+├── api-client.ts
+├── storage.service.ts
+└── token.service.ts
+```
+
+### `src/shared/types`
+
+Use this folder for global shared TypeScript types.
+
+```txt
+src/shared/types/
+├── api.ts
+├── assessment.ts
+├── auth.ts
+├── course.ts
+├── index.ts
+└── user.ts
+```
+
+### `src/shared/constants`
+
+Use this folder for reusable application constants.
+
+```txt
+src/shared/constants/
+├── api-endpoints.ts
+├── dashboard.ts
+├── env.ts
+├── navigation.ts
+└── site.ts
+```
+
+### `src/shared/utils`
+
+Use this folder for small reusable utilities that are shared across features. Prefer
+`src/shared/lib` for named helper modules with clear ownership, and avoid large catch-all files.
+
+```txt
+src/shared/utils/
+└── utils.ts
 ```
 
 ## `src/stores`
@@ -378,30 +454,16 @@ src/stores/
 └── ui-store.ts
 ```
 
-## `src/types`
-
-Use this folder for global shared TypeScript types.
-
-```txt
-src/types/
-├── api.ts
-├── assessment.ts
-├── auth.ts
-├── course.ts
-├── index.ts
-└── user.ts
-```
-
 ## `src/config`
 
-Use this folder for application configuration objects.
+Use this folder for application configuration objects. Reusable route and permission helpers belong
+in `src/shared/lib/routes.ts` and `src/shared/lib/permissions.ts`.
 
 ```txt
 src/config/
 ├── dashboard.ts
 ├── env.ts
 ├── navigation.ts
-├── permissions.ts
 └── site.ts
 ```
 
@@ -433,8 +495,8 @@ public/
 ## API Integration
 
 EdXelera should communicate with backend services through feature service modules. Do not place
-core business logic in Next.js route handlers. Services should use the centralized Axios client
-from `src/shared/services/api-client` and type backend payloads with feature-local DTOs.
+core business logic in Next.js route handlers. Services should use the centralized Axios client at
+`src/shared/services/api-client.ts` and type backend payloads with feature-local DTOs.
 
 ```ts
 // src/features/courses/services/course-service.ts
@@ -455,8 +517,8 @@ Use a layered route protection strategy:
 - Layout-level guards for role-specific sections
 - Component-level permission checks for individual actions
 
-Protected areas should rely on shared permission utilities from `src/lib/permissions.ts` and route
-constants from `src/lib/routes.ts`.
+Protected areas should rely on shared permission utilities from `src/shared/lib/permissions.ts` and
+route constants from `src/shared/lib/routes.ts`.
 
 ## Naming Conventions
 
@@ -469,16 +531,16 @@ Use consistent names across the codebase:
 | Services | Feature name plus `service` | `course-service.ts` |
 | DTOs | Feature DTO files for backend payloads | `course.dto.ts` |
 | Schemas | Feature name plus `schema` | `course-schema.ts` |
-| Types | UI/domain-only feature types, descriptive files globally | `src/features/courses/types.ts` |
+| Types | UI/domain-only feature types; global shared types live in `src/shared/types/` | `src/features/courses/types.ts` |
 | Constants | Feature name plus `constants` | `course.constants.ts` |
 
 ## Recommended Rules
 
 - Keep `src/app` thin.
 - Co-locate feature-specific logic inside `src/features`.
-- Put reusable primitives in `src/components/ui`.
+- Put reusable primitives in `src/shared/components/ui`.
 - Put backend communication inside `services/`.
-- Keep global utilities in `src/lib`.
+- Keep global reusable utilities and infrastructure under `src/shared`.
 - Prefer `@/` imports for source files because `tsconfig.json` maps `@/*` to `./src/*`.
 - Avoid deep component nesting when a feature can be split into smaller components.
 - Keep framework configuration files at the project root.

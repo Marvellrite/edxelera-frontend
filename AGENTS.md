@@ -49,11 +49,11 @@ The backend service is responsible for:
 - Keep `src/app` thin.
 - Use `src/app` for routing, layouts, loading states, error boundaries, and page composition.
 - Move feature-specific UI and logic into `src/features`.
-- Put shared reusable UI primitives in `src/components/ui`.
-- Put shared layout components in `src/components/layout`.
-- Put global infrastructure utilities in `src/lib`.
-- Put global reusable hooks in `src/hooks`.
-- Put global shared types in `src/types`.
+- Put shared reusable UI primitives in `src/shared/components/ui`.
+- Put shared layout components in `src/shared/components/layout`.
+- Put reusable non-UI helper modules in `src/shared/lib`.
+- Put global reusable hooks in `src/shared/hooks`.
+- Put global shared types in `src/shared/types`.
 - Keep static assets in `public`.
 - Prefer `@/` imports for source files because `tsconfig.json` maps `@/*` to `./src/*`.
 
@@ -84,33 +84,38 @@ Use this folder for:
 - Feature components
 - Feature hooks
 - Feature service functions
+- Feature DTOs in `src/features/<feature>/dto`
 - Feature schemas
 - Feature constants
 - Feature utilities
-- Feature types
+- Feature UI/domain-only types
 
-### `src/components`
+### `src/shared`
 
-Owns reusable components that are not specific to one feature.
-
-Use this folder for:
-
-- UI primitives
-- Shared layout components
-- Shared product components
-- Reusable form components
-
-### `src/lib`
-
-Owns global infrastructure and framework-agnostic utilities.
+Owns reusable code that is not specific to one feature.
 
 Use this folder for:
 
-- Route constants
-- Permission helpers
+- UI primitives in `src/shared/components/ui`
+- Shared layout components in `src/shared/components/layout`
+- Shared product and form components in `src/shared/components`
+- Global hooks in `src/shared/hooks`
+- Global shared types in `src/shared/types`
+- Shared constants in `src/shared/constants`
+- Shared services in `src/shared/services`
+- React Query infrastructure in `src/shared/react-query`
+
+### `src/shared/lib`
+
+Owns reusable non-UI helper modules and framework-agnostic shared logic.
+
+Use this folder for:
+
+- Route helpers in `src/shared/lib/routes.ts`
+- Permission helpers in `src/shared/lib/permissions.ts`
 - Auth helpers
 - Validation utilities
-- General utilities
+- Focused helpers such as date formatting, class-name composition, and storage helpers
 
 ### `src/stores`
 
@@ -120,11 +125,12 @@ need to be shared across the app.
 ## API Rules
 
 - Do not hardcode API URLs inside components or feature logic.
-- Use the centralized Axios client from `src/shared/services/api-client`.
+- Use the centralized Axios client from `src/shared/services/api-client.ts`.
 - All backend communication must go through `src/features/*/services`.
-- Feature service modules should import DTO request/response contracts from `src/features/*/dto`.
+- Feature service modules should import DTO request/response contracts from
+  `src/features/<feature>/dto/`.
 - Keep DTOs as the source of truth for backend payloads. Do not duplicate API request/response
-  shapes in feature `types` folders.
+  shapes in feature `types.ts` files.
 - Use React Query for all asynchronous server-state management:
   - data fetching
   - caching
@@ -201,9 +207,10 @@ Do not store server data in a global client store unless there is a clear reason
 | Components | PascalCase exports; file style should be consistent per folder | `CourseCard` |
 | Hooks | `use` prefix | `useCourses` |
 | Services | Feature name plus `service` | `course-service.ts` |
+| DTOs | Feature DTO files for backend payloads | `course.dto.ts` |
 | Schemas | Feature name plus `schema` | `course-schema.ts` |
-| Feature types | `types.ts` inside the feature | `src/features/courses/types.ts` |
-| Global types | Descriptive file names | `src/types/course.ts` |
+| Feature types | UI/domain-only `types.ts` inside the feature | `src/features/courses/types.ts` |
+| Global types | Descriptive file names under `src/shared/types` | `src/shared/types/course.ts` |
 | Constants | Descriptive constants grouped by feature | `course.constants.ts` |
 
 ## Git Conventions
