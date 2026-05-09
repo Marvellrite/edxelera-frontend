@@ -2,7 +2,7 @@
 
 import type { ClipboardEvent, KeyboardEvent } from "react";
 import { useRef } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/shared/utils/utils";
 
 const otpLength = 6;
 

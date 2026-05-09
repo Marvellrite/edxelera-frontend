@@ -1,4 +1,4 @@
-import type { AuthRole } from "@/lib/auth";
+import type { AuthRole } from "@/shared/types/auth-role";
 
 export type AuthState = {
   userId: string | null;

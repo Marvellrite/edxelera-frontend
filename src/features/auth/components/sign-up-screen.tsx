@@ -6,15 +6,16 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputField } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { InputField } from "@/shared/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   signUpSchema,
   type SignUpFormValues,
 } from "@/features/auth/schemas/sign-up-schema";
-import { signUp } from "@/features/auth/services/auth.service";
+import { useSignUpMutation } from "@/features/auth/mutations/auth.mutations";
+import { storageService } from "@/shared/services/storage.service";
 
 const initialValues: SignUpFormValues = {
   fullName: "",
@@ -25,8 +26,8 @@ const initialValues: SignUpFormValues = {
 
 export function SignUpScreen() {
   const router = useRouter();
+  const signUpMutation = useSignUpMutation();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
@@ -38,21 +39,18 @@ export function SignUpScreen() {
 
   async function submitSignUp(values: SignUpFormValues) {
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      await signUp({
+      await signUpMutation.mutateAsync({
         fullname: values.fullName,
         email: values.email,
         password: values.password,
       });
-      sessionStorage.setItem("pending_verification_email", values.email);
+      storageService.setItem("pending_verification_email", values.email, "session");
       router.push(
         `/auth/verify-email`,
       );
     } catch {
       setErrorMessage("Unable to create your account. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -132,7 +130,7 @@ export function SignUpScreen() {
                   </Link>
                 </p>
 
-                <Button type="submit" fullWidth isLoading={isLoading}>
+                <Button type="submit" fullWidth isLoading={signUpMutation.isPending}>
                   Sign Up
                 </Button>
               </div>

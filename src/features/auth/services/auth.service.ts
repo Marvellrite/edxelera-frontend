@@ -1,60 +1,67 @@
-import { apiClient } from "@/lib/api/client";
-import { apiEndpoints } from "@/lib/api/endpoints";
+import { http } from "@/shared/services/http-client";
+import { apiEndpoints } from "@/shared/constants/api-endpoints";
 import { uploadFileToS3 } from "@/features/uploads/api/upload-api";
-import type { OnboardingProfilePayload } from "@/features/auth/services/auth.types";
 import type {
-  AuthApiResponse,
-  AuthTokenResponse,
-  LoginRequest,
-  OnboardingProfileRequest,
-  SignUpRequest,
-  VerifyEmailRequest,
-} from "@/features/auth/types";
+  AuthApiResponseDto,
+  AuthTokenResponseDto,
+  LoginRequestDto,
+  OnboardingProfilePayloadDto,
+  OnboardingProfileRequestDto,
+  SignUpRequestDto,
+  VerifyEmailRequestDto,
+} from "@/features/auth/dto/auth.dto";
 
-export async function signUp(payload: SignUpRequest) {
-  return apiClient.post<AuthApiResponse>(
+export const authService = {
+  signUp,
+  login,
+  verifyEmail,
+  updateOnboardingProfile,
+};
+
+export async function signUp(payload: SignUpRequestDto) {
+  return http.post<AuthApiResponseDto>(
     `${apiEndpoints.auth}/sign-up`,
     payload,
   );
 }
 
-export async function login(payload: LoginRequest) {
-  return apiClient.post<AuthApiResponse>(
+export async function login(payload: LoginRequestDto) {
+  return http.post<AuthApiResponseDto>(
     `${apiEndpoints.auth}/sign-in`,
     payload,
   );
 }
 
-export async function verifyEmail(payload: VerifyEmailRequest) {
-  return apiClient.post<AuthApiResponse>(
+export async function verifyEmail(payload: VerifyEmailRequestDto) {
+  return http.post<AuthApiResponseDto>(
     `${apiEndpoints.auth}/verify-otp`,
     payload,
   );
 }
 
 export async function updateOnboardingProfile(
-  payload: OnboardingProfileRequest,
+  payload: OnboardingProfileRequestDto,
 ) {
   const { image, ...profileFields } = payload;
   const uploadedImageKey = image ? await uploadFileToS3(image, image.name) : "";
 
   if (uploadedImageKey) {
-    await apiClient.patch<AuthApiResponse>(
+    await http.patch<AuthApiResponseDto>(
       `${apiEndpoints.profile}/change-avatar`,
       { image: uploadedImageKey },
     );
   }
 
-  const profileFieldsPayload: Omit<OnboardingProfilePayload, "image"> =
+  const profileFieldsPayload: Omit<OnboardingProfilePayloadDto, "image"> =
     profileFields;
 
-  return apiClient.patch<AuthApiResponse>(
+  return http.patch<AuthApiResponseDto>(
     `${apiEndpoints.profile}/edit`,
     profileFieldsPayload,
   );
 }
 
-export function getAccessTokenFromResponse(response: AuthTokenResponse) {
+export function getAccessTokenFromResponse(response: AuthTokenResponseDto) {
   return (
     response.access_token ??
     response.accessToken ??

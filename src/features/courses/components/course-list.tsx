@@ -1,5 +1,5 @@
 import { CourseCard } from "@/features/courses/components/course-card";
-import type { Course } from "@/types/course";
+import type { Course } from "@/shared/types/course";
 
 type CourseListProps = {
   courses: Course[];

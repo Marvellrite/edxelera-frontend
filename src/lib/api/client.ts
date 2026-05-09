@@ -1,5 +1,5 @@
-import { ACCESS_TOKEN_COOKIE } from "@/lib/auth-cookies";
-import env from "@/config/env";
+import { ACCESS_TOKEN_COOKIE } from "@/shared/services/token.service";
+import env from "@/shared/constants/env";
 
 type ApiClientOptions = {
   baseUrl?: string;

@@ -4,17 +4,16 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/shared/components/ui/button";
 import { OtpInput } from "@/features/auth/components/otp-input";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
-import {
-  getAccessTokenFromResponse,
-  verifyEmail,
-} from "@/features/auth/services/auth.service";
-import { setAccessTokenCookie } from "@/lib/auth-cookies";
+import { useVerifyEmailMutation } from "@/features/auth/mutations/auth.mutations";
+import { getAccessTokenFromResponse } from "@/features/auth/services/auth.service";
+import { setAccessTokenCookie } from "@/shared/services/token.service";
+import { storageService } from "@/shared/services/storage.service";
 import { AuthLogo } from "./auth-logo";
 
 const initialValues: VerifyEmailFormValues = {
@@ -23,8 +22,8 @@ const initialValues: VerifyEmailFormValues = {
 
 export function VerifyEmailScreen() {
   const router = useRouter();
+  const verifyEmailMutation = useVerifyEmailMutation();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     clearErrors,
     control,
@@ -46,7 +45,8 @@ export function VerifyEmailScreen() {
   }
 
   async function submitVerification(values: VerifyEmailFormValues) {
-    const email = sessionStorage.getItem("pending_verification_email") ?? "";
+    const email =
+      storageService.getItem("pending_verification_email", "session") ?? "";
 
     if (!email) {
       setErrorMessage("Please sign up again so we can verify your email.");
@@ -54,9 +54,8 @@ export function VerifyEmailScreen() {
     }
 
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      const response = await verifyEmail({
+      const response = await verifyEmailMutation.mutateAsync({
         email,
         otp: values.code,
         otp_type: "account_verification",
@@ -67,12 +66,10 @@ export function VerifyEmailScreen() {
         setAccessTokenCookie(accessToken);
       }
 
-      sessionStorage.removeItem("pending_verification_email");
+      storageService.removeItem("pending_verification_email", "session");
       router.push("/auth/onboarding");
     } catch {
       setErrorMessage("Unable to verify this code. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -107,7 +104,11 @@ export function VerifyEmailScreen() {
                   error={errors.code?.message}
                 />
 
-                <Button type="submit" fullWidth isLoading={isLoading}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  isLoading={verifyEmailMutation.isPending}
+                >
                   Verify
                 </Button>
               </div>
