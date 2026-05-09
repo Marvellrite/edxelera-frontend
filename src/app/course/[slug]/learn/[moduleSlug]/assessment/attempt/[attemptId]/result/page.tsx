@@ -1,4 +1,4 @@
-import { RoutePlaceholder } from "@/components/shared/route-placeholder";
+import { RoutePlaceholder } from "@/shared/components/shared/route-placeholder";
 
 export default function AssessmentResultPage() {
   return (

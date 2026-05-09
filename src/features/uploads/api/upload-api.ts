@@ -1,4 +1,4 @@
-import { apiClient } from "@/lib/api/client";
+import { http } from "@/shared/services/http-client";
 
 export type PresignedUploadUrlRequest = {
   fileType: string;
@@ -16,7 +16,7 @@ export async function getPresignedUploadUrl(
   payload: PresignedUploadUrlRequest,
 ) {
   try {
-    return await apiClient.post<PresignedUploadUrlResponse>(
+    return await http.post<PresignedUploadUrlResponse>(
       presignedUploadUrlEndpoint,
       payload,
     );

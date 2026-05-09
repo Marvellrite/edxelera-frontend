@@ -5,15 +5,15 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputField } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { InputField } from "@/shared/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   onboardingSchema,
   type OnboardingFormValues,
 } from "@/features/auth/schemas/onboarding-schema";
-import { updateOnboardingProfile } from "@/features/auth/services/auth.service";
+import { useUpdateOnboardingProfileMutation } from "@/features/auth/mutations/auth.mutations";
 
 const initialValues: OnboardingFormValues = {
   bio: "",
@@ -31,10 +31,10 @@ const learningOptions = [
 
 export function OnboardingScreen() {
   const router = useRouter();
+  const updateOnboardingProfileMutation = useUpdateOnboardingProfileMutation();
   const profileImageInputRef = useRef<HTMLInputElement>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [profileImage, setProfileImage] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
@@ -46,17 +46,14 @@ export function OnboardingScreen() {
 
   async function submitOnboarding(values: OnboardingFormValues) {
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      await updateOnboardingProfile({
+      await updateOnboardingProfileMutation.mutateAsync({
         ...values,
         image: profileImage,
       });
       router.push("/home");
     } catch {
       setErrorMessage("Unable to save your profile. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -99,7 +96,7 @@ export function OnboardingScreen() {
               <button
                 type="button"
                 onClick={openProfileImagePicker}
-                disabled={isLoading}
+                disabled={updateOnboardingProfileMutation.isPending}
                 className="flex size-[88px] items-center justify-center rounded-full bg-[#ebebeb] transition-colors hover:bg-[#e2e2e2] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#003dae]"
                 aria-label="Upload profile photo"
               >
@@ -154,7 +151,11 @@ export function OnboardingScreen() {
               </div>
 
               <div className="flex w-full flex-col gap-2">
-                <Button type="submit" fullWidth isLoading={isLoading}>
+                <Button
+                  type="submit"
+                  fullWidth
+                  isLoading={updateOnboardingProfileMutation.isPending}
+                >
                   Continue
                 </Button>
                 <button

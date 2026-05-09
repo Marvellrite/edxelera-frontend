@@ -1,4 +1,4 @@
-import { BackButton } from "@/components/shared/back-button";
+import { BackButton } from "@/shared/components/shared/back-button";
 const termsSections = [
   {
     title: "1. Conditions of use",

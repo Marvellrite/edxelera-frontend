@@ -6,20 +6,18 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { InputField } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { Checkbox } from "@/shared/components/ui/checkbox";
+import { InputField } from "@/shared/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
   loginSchema,
   type LoginFormValues,
 } from "@/features/auth/schemas/login-schema";
-import {
-  getAccessTokenFromResponse,
-  login,
-} from "@/features/auth/services/auth.service";
-import { setAccessTokenCookie } from "@/lib/auth-cookies";
+import { useLoginMutation } from "@/features/auth/mutations/auth.mutations";
+import { getAccessTokenFromResponse } from "@/features/auth/services/auth.service";
+import { setAccessTokenCookie } from "@/shared/services/token.service";
 
 const initialValues: LoginFormValues = {
   email: "",
@@ -29,8 +27,8 @@ const initialValues: LoginFormValues = {
 
 export function LoginScreen() {
   const router = useRouter();
+  const loginMutation = useLoginMutation();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     formState: { errors },
     handleSubmit,
@@ -42,9 +40,8 @@ export function LoginScreen() {
 
   async function submitLogin(values: LoginFormValues) {
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      const response = await login({
+      const response = await loginMutation.mutateAsync({
         email: values.email,
         password: values.password,
       });
@@ -60,8 +57,6 @@ export function LoginScreen() {
       setErrorMessage(
         "Unable to log in. Please check your details and try again.",
       );
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -128,7 +123,7 @@ export function LoginScreen() {
                   </Link>
                 </div>
 
-                <Button type="submit" fullWidth isLoading={isLoading}>
+                <Button type="submit" fullWidth isLoading={loginMutation.isPending}>
                   Login
                 </Button>
               </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import env from "@/config/env";
+import env from "@/shared/constants/env";
 
 const proxyCookiePath = "/api/proxy";
 const rootPathCookieNames = new Set(["access_token", "reset_token"]);

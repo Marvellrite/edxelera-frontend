@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { Button } from "@/components/ui/button";
-import { InputField } from "@/components/ui/input";
+import { Button } from "@/shared/components/ui/button";
+import { InputField } from "@/shared/components/ui/input";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import { OtpInput } from "@/features/auth/components/otp-input";
 import {
@@ -19,10 +19,10 @@ import {
   type ForgotPasswordResetValues,
 } from "@/features/auth/schemas/forgot-password-schema";
 import {
-  resetForgottenPassword,
-  sendForgotPasswordOtp,
-  verifyForgotPasswordOtp,
-} from "@/features/auth/services/otp.service";
+  useResetForgottenPasswordMutation,
+  useSendForgotPasswordOtpMutation,
+  useVerifyForgotPasswordOtpMutation,
+} from "@/features/auth/mutations/auth.mutations";
 
 type Stage = "email" | "otp" | "reset";
 
@@ -32,7 +32,13 @@ export function ForgottenPasswordScreen() {
   const [email, setEmail] = useState("");
   const [otpToken, setOtpToken] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const sendForgotPasswordOtpMutation = useSendForgotPasswordOtpMutation();
+  const verifyForgotPasswordOtpMutation = useVerifyForgotPasswordOtpMutation();
+  const resetForgottenPasswordMutation = useResetForgottenPasswordMutation();
+  const isLoading =
+    sendForgotPasswordOtpMutation.isPending ||
+    verifyForgotPasswordOtpMutation.isPending ||
+    resetForgottenPasswordMutation.isPending;
 
   const emailForm = useForm<ForgotPasswordEmailValues>({
     resolver: zodResolver(forgotPasswordEmailSchema),
@@ -67,15 +73,12 @@ export function ForgottenPasswordScreen() {
 
   async function submitEmail(values: ForgotPasswordEmailValues) {
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      await sendForgotPasswordOtp(values);
+      await sendForgotPasswordOtpMutation.mutateAsync(values);
       setEmail(values.email);
       setStage("otp");
     } catch {
       setErrorMessage("Unable to send OTP. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -83,23 +86,19 @@ export function ForgottenPasswordScreen() {
     const otp = values.otp.join("");
 
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      await verifyForgotPasswordOtp({ email, otp });
+      await verifyForgotPasswordOtpMutation.mutateAsync({ email, otp });
       setOtpToken(otp);
       setStage("reset");
     } catch {
       setErrorMessage("Invalid OTP. Please check and try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
   async function submitReset(values: ForgotPasswordResetValues) {
     try {
-      setIsLoading(true);
       setErrorMessage(null);
-      await resetForgottenPassword({
+      await resetForgottenPasswordMutation.mutateAsync({
         email,
         otp: otpToken,
         new_password: values.password,
@@ -107,8 +106,6 @@ export function ForgottenPasswordScreen() {
       router.push("/auth");
     } catch {
       setErrorMessage("Password reset failed. Please try again.");
-    } finally {
-      setIsLoading(false);
     }
   }
 
