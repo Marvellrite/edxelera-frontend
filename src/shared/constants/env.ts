@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const fallbackBackendUrl = "http://192.168.10.20:8000";
 const apiPath = "/api/v1";
+const apiProxyPath = "/api/proxy";
 
 const envSchema = z.object({
   NEXT_PUBLIC_BACKEND_URL: z
@@ -23,9 +24,12 @@ if (!parsedEnv.success) {
   throw new Error(`Invalid environment variables:\n${message}`);
 }
 
+const backendUrl = parsedEnv.data.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
+
 const env = {
-  backendUrl: parsedEnv.data.NEXT_PUBLIC_BACKEND_URL,
-  apiUrl: `${parsedEnv.data.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "")}${apiPath}`,
+  backendUrl,
+  backendApiUrl: `${backendUrl}${apiPath}`,
+  apiUrl: `${apiProxyPath}${apiPath}`,
 } as const;
 
 export default env;
