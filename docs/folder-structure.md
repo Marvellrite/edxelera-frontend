@@ -308,7 +308,7 @@ src/shared/components/ui/
 ├── badge.tsx
 ├── button.tsx
 ├── dropdown.tsx
-├── input.tsx
+├── input/
 ├── modal.tsx
 ├── spinner.tsx
 └── tabs.tsx
