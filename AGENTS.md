@@ -106,7 +106,6 @@ Owns global infrastructure and framework-agnostic utilities.
 
 Use this folder for:
 
-- API client setup
 - Route constants
 - Permission helpers
 - Auth helpers
@@ -121,8 +120,11 @@ need to be shared across the app.
 ## API Rules
 
 - Do not hardcode API URLs inside components or feature logic.
-- Use the centralized Axios client from `src/lib/api`.
+- Use the centralized Axios client from `src/shared/services/api-client`.
 - All backend communication must go through `src/features/*/services`.
+- Feature service modules should import DTO request/response contracts from `src/features/*/dto`.
+- Keep DTOs as the source of truth for backend payloads. Do not duplicate API request/response
+  shapes in feature `types` folders.
 - Use React Query for all asynchronous server-state management:
   - data fetching
   - caching
@@ -139,7 +141,7 @@ need to be shared across the app.
 - Do not call Axios directly inside UI components.
 - Generic/shared UI components must never contain backend fetching logic.
 - Keep business rules out of Next.js route handlers unless intentionally implementing a backend-for-frontend (BFF) layer.
-- Keep request and response types explicit and strongly typed.
+- Keep request and response DTOs explicit and strongly typed.
 - Reuse shared API response types where possible.
 - Use interceptors in the centralized Axios client for:
   - authentication headers

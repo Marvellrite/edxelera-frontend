@@ -1,4 +1,4 @@
-import { http } from "@/shared/services/http-client";
+import { http } from "@/shared/services/api-client";
 import { apiEndpoints } from "@/shared/constants/api-endpoints";
 import { uploadFileToS3 } from "@/features/uploads/api/upload-api";
 import type {

@@ -1,2 +1,3 @@
 - will check the layout config of the auth screens
 - implement the input + error message combination
+- retry auth sign up without inserting otp type

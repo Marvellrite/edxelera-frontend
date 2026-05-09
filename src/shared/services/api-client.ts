@@ -1,12 +1,22 @@
-import env from "@/shared/constants/env";
+import axios, {
+  type AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type AxiosResponse,
+  type RawAxiosRequestHeaders,
+} from "axios";
 import { tokenService } from "@/shared/services/token.service";
+import env from "@/shared/constants/env";
 
-type HttpClientOptions = {
+type ApiClientOptions = {
   baseUrl?: string;
-  headers?: HeadersInit;
+  headers?: RawAxiosRequestHeaders;
 };
 
-type RequestOptions = Omit<RequestInit, "body"> & {
+type RequestOptions = Omit<
+  AxiosRequestConfig,
+  "baseURL" | "data" | "url"
+> & {
   body?: unknown;
 };
 
@@ -28,39 +38,51 @@ export class HttpError extends Error {
   }
 }
 
-class HttpClient {
-  private readonly baseUrl: string;
-  private readonly headers: HeadersInit;
+class ApiClient {
+  private readonly client: AxiosInstance;
 
-  constructor({ baseUrl = "", headers = {} }: HttpClientOptions = {}) {
-    this.baseUrl = baseUrl;
-    this.headers = headers;
-  }
-
-  async request<TResponse>(path: string, options: RequestOptions = {}) {
-    const { body, headers, ...requestOptions } = options;
-    const response = await fetch(`${this.baseUrl}${path}`, {
-      credentials: "include",
-      ...requestOptions,
+  constructor({ baseUrl = "", headers = {} }: ApiClientOptions = {}) {
+    this.client = axios.create({
+      baseURL: baseUrl,
       headers: {
         "Content-Type": "application/json",
         "x-client-type": "web",
-        ...getAuthHeader(),
-        ...this.headers,
         ...headers,
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      withCredentials: true,
     });
 
-    if (!response.ok) {
-      throw new HttpError(await normalizeBackendError(response));
-    }
+    this.client.interceptors.request.use((config) => {
+      const authHeader = getAuthHeader();
+
+      if (authHeader.Authorization) {
+        config.headers.Authorization = authHeader.Authorization;
+      }
+
+      return config;
+    });
+
+    this.client.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError) => {
+        throw new HttpError(normalizeBackendError(error));
+      },
+    );
+  }
+
+  async request<TResponse>(path: string, options: RequestOptions = {}) {
+    const { body, ...requestOptions } = options;
+    const response = await this.client.request<TResponse>({
+      url: path,
+      data: body,
+      ...requestOptions,
+    });
 
     if (response.status === 204) {
       return undefined as TResponse;
     }
 
-    return response.json() as Promise<TResponse>;
+    return response.data;
   }
 
   get<TResponse>(path: string, options?: RequestOptions) {
@@ -84,38 +106,32 @@ class HttpClient {
   }
 }
 
-export const http = new HttpClient({
+export const apiClient = new ApiClient({
   baseUrl: env.apiUrl,
 });
 
-export const apiClient = http;
+export const http = apiClient;
 
-function getAuthHeader(): HeadersInit {
+function getAuthHeader() {
   const accessToken = tokenService.getAccessToken();
 
   return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
 }
 
-async function normalizeBackendError(response: Response): Promise<BackendError> {
-  const details = await readErrorDetails(response);
+function normalizeBackendError(error: AxiosError): BackendError {
+  const response = error.response as AxiosResponse<unknown> | undefined;
+  const details = response?.data;
+  const status = response?.status ?? 0;
   const message =
-    getErrorMessage(details) ?? `API request failed with status ${response.status}`;
+    getErrorMessage(details) ??
+    error.message ??
+    `API request failed with status ${status}`;
 
   return {
-    status: response.status,
+    status,
     message,
     details,
   };
-}
-
-async function readErrorDetails(response: Response) {
-  const contentType = response.headers.get("content-type");
-
-  if (contentType?.includes("application/json")) {
-    return response.json().catch(() => undefined);
-  }
-
-  return response.text().catch(() => undefined);
 }
 
 function getErrorMessage(details: unknown) {

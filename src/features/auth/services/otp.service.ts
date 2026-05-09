@@ -1,4 +1,4 @@
-import { http } from "@/shared/services/http-client";
+import { http } from "@/shared/services/api-client";
 import { apiEndpoints } from "@/shared/constants/api-endpoints";
 import type {
   AuthApiResponseDto,
@@ -13,7 +13,7 @@ export const otpService = {
   resetForgottenPassword,
 };
 
-export async function sendForgotPasswordOtp(
+async function sendForgotPasswordOtp(
   payload: SendForgotPasswordOtpRequestDto,
 ) {
   return http.post<AuthApiResponseDto>(
@@ -22,7 +22,7 @@ export async function sendForgotPasswordOtp(
   );
 }
 
-export async function verifyForgotPasswordOtp(
+async function verifyForgotPasswordOtp(
   payload: VerifyForgotPasswordOtpRequestDto,
 ) {
   return http.post<AuthApiResponseDto>(
@@ -31,7 +31,7 @@ export async function verifyForgotPasswordOtp(
   );
 }
 
-export async function resetForgottenPassword(
+async function resetForgottenPassword(
   payload: ResetForgottenPasswordRequestDto,
 ) {
   return http.post<AuthApiResponseDto>(

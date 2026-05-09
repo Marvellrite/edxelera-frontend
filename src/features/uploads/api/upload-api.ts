@@ -1,4 +1,4 @@
-import { http } from "@/shared/services/http-client";
+import { http } from "@/shared/services/api-client";
 
 export type PresignedUploadUrlRequest = {
   fileType: string;

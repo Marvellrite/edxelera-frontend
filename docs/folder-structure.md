@@ -250,6 +250,9 @@ src/features/courses/
 │   └── course-sidebar.tsx
 ├── constants/
 │   └── course.constants.ts
+├── dto/
+│   ├── course.dto.ts
+│   └── enrollment.dto.ts
 ├── hooks/
 │   ├── use-course-details.ts
 │   ├── use-course-progress.ts
@@ -263,6 +266,10 @@ src/features/courses/
 │   └── course.utils.ts
 └── types.ts
 ```
+
+Use `dto/` for backend request and response contracts, and import those DTOs from feature service
+modules. Keep feature `types.ts` files for UI/domain-only types; do not duplicate API payload
+shapes there.
 
 ## `src/components`
 
@@ -336,9 +343,6 @@ The `src/lib` directory contains application infrastructure and framework-agnost
 ```txt
 src/lib/
 ├── api/
-│   ├── client.ts
-│   ├── endpoints.ts
-│   ├── interceptors.ts
 │   └── query-client.ts
 ├── auth.ts
 ├── constants.ts
@@ -429,14 +433,17 @@ public/
 ## API Integration
 
 EdXelera should communicate with backend services through feature service modules. Do not place
-core business logic in Next.js route handlers.
+core business logic in Next.js route handlers. Services should use the centralized Axios client
+from `src/shared/services/api-client` and type backend payloads with feature-local DTOs.
 
 ```ts
 // src/features/courses/services/course-service.ts
-import { apiClient } from "@/lib/api/client";
+import { http } from "@/shared/services/api-client";
+import type { CourseDto } from "@/features/courses/dto/course.dto";
+import type { ApiResponse } from "@/shared/types/api";
 
 export const getCourses = async () => {
-  return apiClient.get("/courses");
+  return http.get<ApiResponse<CourseDto[]>>("/courses");
 };
 ```
 
@@ -460,8 +467,9 @@ Use consistent names across the codebase:
 | Components | PascalCase file or kebab-case file, consistently per folder | `CourseCard.tsx` or `course-card.tsx` |
 | Hooks | Kebab-case file, `use` prefix for function | `use-courses.ts` |
 | Services | Feature name plus `service` | `course-service.ts` |
+| DTOs | Feature DTO files for backend payloads | `course.dto.ts` |
 | Schemas | Feature name plus `schema` | `course-schema.ts` |
-| Types | `types.ts` inside a feature, descriptive files globally | `src/features/courses/types.ts` |
+| Types | UI/domain-only feature types, descriptive files globally | `src/features/courses/types.ts` |
 | Constants | Feature name plus `constants` | `course.constants.ts` |
 
 ## Recommended Rules
