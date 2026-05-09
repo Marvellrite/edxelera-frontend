@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { Button } from "@/shared/components/ui/button";
 import { InputField } from "@/shared/components/ui/input";
+import { Link } from "@/shared/components/ui/link";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import { OtpInput } from "@/features/auth/components/otp-input";
 import {
@@ -187,13 +187,14 @@ export function ForgottenPasswordScreen() {
               <div className="flex w-full flex-col items-center gap-3">
                 <p className="text-center text-base leading-6">
                   Didn&apos;t receive the code?{" "}
-                  <button type="button" className="font-semibold text-[#003dae]">
+                  <button type="button" className="font-semibold text-primary">
                     Resend
                   </button>
                 </p>
                 <Link
                   href="/auth"
-                  className="text-center text-base font-semibold leading-6 text-[#003dae]"
+                  color="blue"
+                  className="text-center text-base font-semibold leading-6"
                 >
                   Login with password
                 </Link>

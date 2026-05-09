@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/shared/components/ui/link";
 
 export default function NotFound() {
   return (
@@ -14,7 +14,7 @@ export default function NotFound() {
       </p>
       <Link
         href="/"
-        className="mt-6 rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium"
+        className="mt-6 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground focus-visible:outline-ring"
       >
         Go home
       </Link>

@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
@@ -9,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "@/shared/components/ui/button";
 import { Checkbox } from "@/shared/components/ui/checkbox";
 import { InputField } from "@/shared/components/ui/input";
+import { Link } from "@/shared/components/ui/link";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
@@ -159,6 +159,7 @@ export function LoginScreen() {
                 Don&apos;t have an account?{" "}
                 <Link
                   href="/auth/sign-up"
+                  color="blue"
                   className="font-semibold md:font-medium"
                 >
                   Sign Up

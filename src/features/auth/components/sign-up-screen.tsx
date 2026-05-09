@@ -1,13 +1,13 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/shared/components/ui/button";
 import { InputField } from "@/shared/components/ui/input";
+import { Link } from "@/shared/components/ui/link";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
@@ -124,6 +124,7 @@ export function SignUpScreen() {
                   Already have an account?{" "}
                   <Link
                     href="/auth"
+                    color="blue"
                     className="font-semibold md:font-medium"
                   >
                     Login
@@ -146,6 +147,7 @@ export function SignUpScreen() {
               By creating an account, you agree to Edxelera&apos;s{" "}
               <Link
                 href="/terms-of-service"
+                color="blue"
                 className="font-semibold md:font-medium"
               >
                 terms of service
@@ -153,6 +155,7 @@ export function SignUpScreen() {
               and{" "}
               <Link
                 href="/terms-of-service"
+                color="blue"
                 className="font-semibold md:font-medium"
               >
                 privacy policy
