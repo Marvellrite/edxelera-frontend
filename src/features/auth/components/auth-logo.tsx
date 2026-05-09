@@ -7,7 +7,7 @@ type AuthLogoProps = {
 
 export function AuthLogo({
   priority = true,
-  className = "h-10 w-[232px]",
+  className = "h-10 w-58",
 }: AuthLogoProps) {
   return (
     <Image
