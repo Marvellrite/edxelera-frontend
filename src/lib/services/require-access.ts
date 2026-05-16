@@ -5,16 +5,15 @@ import ROUTES from "@/lib/config/routes"
 import getCurrentUser from "./get-current-user"
 
 type RequireAccessParams = {
+    role: UserRole;
     allowedRoles: UserRole[]
 }
 
-const requireAccess = async ({allowedRoles}: RequireAccessParams)=>{
+const requireAccess = async ({role, allowedRoles}: RequireAccessParams)=>{
 
-    const user = await getCurrentUser()
+    // const user = await getCurrentUser()
 
-    console.log("user==>", user)
-
-    const access = evaluateAccess({userRole:user.role, allowedRoles})
+    const access = evaluateAccess({userRole:role, allowedRoles})
 
     if(!access.allowed) redirect(ROUTES.unauthorized)
 }

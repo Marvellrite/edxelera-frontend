@@ -1,30 +1,45 @@
+import UserRole from "../types/auth/user-role";
+
 export const queryKeys = {
   auth: {
-    me: ["auth", "me"] as const,
+    me: (role: UserRole) => ["auth", "me", role] as const,
   },
+
   courses: {
-    all: ["courses"] as const,
-    lists: () => [...queryKeys.courses.all, "list"] as const,
-    detail: (slug: string) =>
-      [...queryKeys.courses.all, "detail", slug] as const,
-    progress: (courseId: string) =>
-      [...queryKeys.courses.all, "progress", courseId] as const,
+    all: (role: UserRole) => ["courses", role] as const,
+
+    lists: (role: UserRole) =>
+      [...queryKeys.courses.all(role), "list"] as const,
+
+    detail: (role: UserRole, slug: string) =>
+      [...queryKeys.courses.all(role), "detail", slug] as const,
+
+    progress: (role: UserRole, courseId: string) =>
+      [...queryKeys.courses.all(role), "progress", courseId] as const,
   },
+
   assessments: {
-    all: ["assessments"] as const,
-    attempt: (attemptId: string) =>
-      [...queryKeys.assessments.all, "attempt", attemptId] as const,
-    result: (attemptId: string) =>
-      [...queryKeys.assessments.all, "result", attemptId] as const,
+    all: (role: UserRole) => ["assessments", role] as const,
+
+    attempt: (role: UserRole, attemptId: string) =>
+      [...queryKeys.assessments.all(role), "attempt", attemptId] as const,
+
+    result: (role: UserRole, attemptId: string) =>
+      [...queryKeys.assessments.all(role), "result", attemptId] as const,
   },
+
   users: {
-    all: ["users"] as const,
-    detail: (userId: string) => [...queryKeys.users.all, userId] as const,
+    all: (role: UserRole) => ["users", role] as const,
+
+    detail: (role: UserRole, userId: string) =>
+      [...queryKeys.users.all(role), userId] as const,
   },
+
   notifications: {
-    all: ["notifications"] as const,
+    all: (role: UserRole) => ["notifications", role] as const,
   },
+
   transactions: {
-    all: ["transactions"] as const,
+    all: (role: UserRole) => ["transactions", role] as const,
   },
 } as const;

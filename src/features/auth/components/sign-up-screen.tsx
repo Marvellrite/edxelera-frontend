@@ -15,7 +15,7 @@ import {
   type SignUpFormValues,
 } from "@/features/auth/schemas/sign-up-schema";
 import { useSignUpMutation } from "@/features/auth/mutations/auth.mutations";
-import { storageService } from "@/lib/services/storage.service";
+import storageService from "@/lib/services/storage.service";
 import ROUTES from "@/lib/config/routes";
 
 const initialValues: SignUpFormValues = {

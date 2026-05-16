@@ -21,7 +21,7 @@ const ROUTES = {
     auth:{
         signUp: '/auth/sign-up',
         signIn: '/auth/sign-in',
-        verifyEmail: '/auth/verfy-email',
+        verifyEmail: '/auth/verify-email',
         forgottenPassword: '/auth/forgotten-password',
         onboarding: '/auth/onboarding',
     },

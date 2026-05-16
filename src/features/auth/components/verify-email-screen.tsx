@@ -11,7 +11,7 @@ import {
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
 import { useVerifyEmailMutation } from "@/features/auth/mutations/auth.mutations";
-import { storageService } from "@/lib/services/storage.service";
+import storageService from "@/lib/services/storage.service";
 import { AuthLogo } from "./auth-logo";
 import ROUTES from "@/lib/config/routes";
 
