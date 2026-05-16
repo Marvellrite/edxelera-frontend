@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/shared/utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 export const buttonStates = [
   "default",

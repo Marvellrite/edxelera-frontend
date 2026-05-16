@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import type { ButtonHTMLAttributes, ReactNode } from "react";
-import { cn } from "@/shared/utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 type BackButtonProps = Omit<
   ButtonHTMLAttributes<HTMLButtonElement>,

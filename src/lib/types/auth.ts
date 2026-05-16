@@ -1,7 +1,7 @@
-import type { AuthRole } from "@/shared/types/auth/user-role";
+import type UserRole from "@/lib/types/auth/user-role";
 
 export type AuthUser = {
   id: string;
   email: string;
-  role: AuthRole;
+  role: UserRole;
 };

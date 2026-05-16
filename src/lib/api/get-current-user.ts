@@ -1,10 +1,20 @@
 import { apiEndpoints } from "../constants/api-endpoints"
-import { User } from "@/shared/types"
-import { http } from "./api-client"
+import { User } from "@/lib/types"
+import { http } from "./client"
 
-const getCurrentUser = async ():Promise<User>=>{
-    console.log("I am here")
-    return await http.get(`${apiEndpoints.auth}/me`)
+type GetCurrentUserResponseDTO = {
+    success: boolean,
+    message: string,
+    data: User
 }
 
-export default getCurrentUser
+type getCurrentUserAPIParams = {
+    cookies: string
+}
+
+const getCurrentUserAPI = async ({cookies}:getCurrentUserAPIParams):Promise<GetCurrentUserResponseDTO>=>{
+    const response = await http.get<GetCurrentUserResponseDTO>(`${apiEndpoints.auth}/me`, {cookies})
+    return response
+}
+
+export default getCurrentUserAPI

@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { queryKeys } from "@/shared/react-query/query-keys";
+import { queryKeys } from "@/lib/react-query/query-keys";
 
 export function useCurrentUserQuery() {
   return useQuery({

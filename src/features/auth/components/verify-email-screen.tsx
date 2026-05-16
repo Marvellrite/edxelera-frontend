@@ -4,16 +4,16 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { Button } from "@/shared/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { OtpInput } from "@/features/auth/components/otp-input";
 import {
   verifyEmailSchema,
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
 import { useVerifyEmailMutation } from "@/features/auth/mutations/auth.mutations";
-import { storageService } from "@/shared/services/storage.service";
+import { storageService } from "@/lib/services/storage.service";
 import { AuthLogo } from "./auth-logo";
-import ROUTES from "@/shared/config/routes";
+import ROUTES from "@/lib/config/routes";
 
 const initialValues: VerifyEmailFormValues = {
   code: "",

@@ -1,5 +1,5 @@
-export type { ApiResponse } from "@/shared/types/api";
-export type { AssessmentStatus } from "@/shared/types/assessment";
-export type { AuthUser } from "@/shared/types/auth";
-export type { Course } from "@/shared/types/course";
-export type { User } from "@/shared/types/user";
+export type { ApiResponse } from "@/lib/types/api";
+export type { AssessmentStatus } from "@/lib/types/assessment";
+export type { AuthUser } from "@/lib/types/auth";
+export type { Course } from "@/lib/types/course";
+export type { User } from "@/lib/types/user";

@@ -7,7 +7,7 @@ import {
   type InputHTMLAttributes,
   type ReactNode,
 } from "react";
-import { cn } from "@/shared/utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 export const checkboxStates = [
   "default",

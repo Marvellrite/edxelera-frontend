@@ -1,4 +1,4 @@
-import { Link } from "@/shared/components/ui/link";
+import { Link } from "@/components/ui/link";
 
 const publicLinks = [
   { href: "/explore", label: "Explore" },

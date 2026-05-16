@@ -1,0 +1,1 @@
+export { default as getCurrentUserAPI } from './get-current-user';

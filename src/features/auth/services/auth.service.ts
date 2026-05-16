@@ -1,4 +1,4 @@
-import { http } from "@/lib/api/api-client";
+import { http } from "@/lib/api/client";
 import { apiEndpoints } from "@/lib/constants/api-endpoints";
 import { uploadFileToS3 } from "@/features/uploads/api/upload-api";
 import type {

@@ -1,8 +1,8 @@
-import type { AuthRole } from "@/shared/types/auth/user-role";
+import type UserRole from "@/lib/types/auth/user-role";
 
 export type AuthState = {
   userId: string | null;
-  role: AuthRole | null;
+  role: UserRole | null;
 };
 
 export const initialAuthState: AuthState = {

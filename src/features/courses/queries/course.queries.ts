@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { courseService } from "@/features/courses/services/course-service";
-import { queryKeys } from "@/shared/react-query/query-keys";
+import { queryKeys } from "@/lib/react-query/query-keys";
 
 export function useCoursesQuery() {
   return useQuery({

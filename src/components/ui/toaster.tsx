@@ -1,8 +1,8 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { cn } from "@/shared/utils/utils";
-import type { Toast, ToastVariant } from "@/shared/hooks/use-toast";
+import { cn } from "@/lib/utils/utils";
+import type { Toast, ToastVariant } from "@/lib/hooks/use-toast";
 
 type ToasterProps = {
   toasts: Toast[];

@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import ROUTES from "./shared/config/routes";
-import { isProtected, isPublic } from "./shared/utils/routes/route-guards";
-import { ACCESS_TOKEN_COOKIE } from "./shared/config/auth";
+import { isProtected, isPublic } from "./lib/utils/routes/route-guards";
+import { ACCESS_TOKEN_COOKIE } from "./lib/config/auth";
 
 export function proxy(req: NextRequest) {
   const accessToken = req.cookies.get(ACCESS_TOKEN_COOKIE)?.value;

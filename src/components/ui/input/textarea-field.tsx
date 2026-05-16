@@ -10,8 +10,8 @@ import { FieldMessage } from "./field-message";
 import {
   FieldLabel,
   type FieldLabelType,
-} from "@/shared/components/ui/field-label";
-import { cn } from "@/shared/utils/utils";
+} from "@/components/ui/field-label";
+import { cn } from "@/lib/utils/utils";
 
 export type TextareaFieldProps = TextareaHTMLAttributes<HTMLTextAreaElement> & {
   id: string;

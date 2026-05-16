@@ -1,11 +1,13 @@
 import axios, {
+  RawAxiosHeaders,
   type AxiosError,
   type AxiosInstance,
   type AxiosRequestConfig,
-  type AxiosResponse,
   type RawAxiosRequestHeaders,
 } from "axios";
-import env from "@/shared/constants/env";
+import env from "@/lib/constants/env";
+import normalizeBackendError from "./error";
+import { BackendError } from "./types";
 
 type ApiClientOptions = {
   baseUrl?: string;
@@ -17,12 +19,7 @@ type RequestOptions = Omit<
   "baseURL" | "data" | "url"
 > & {
   body?: unknown;
-};
-
-export type BackendError = {
-  status: number;
-  message: string;
-  details?: unknown;
+  cookies?: string
 };
 
 const isServer = typeof window === "undefined"
@@ -54,10 +51,6 @@ class ApiClient {
     });
 
 
-    this.client.interceptors.request.use((config) => {
-  console.log("🔥 Axios request interceptor:", config.method, config.url);
-  return config;
-});
 
     this.client.interceptors.response.use(
       (response) => response,
@@ -68,7 +61,11 @@ class ApiClient {
   }
 
   async request<TResponse>(path: string, options: RequestOptions = {}) {
-    const { body, ...requestOptions } = options;
+    const { body, cookies, ...requestOptions } = options;
+
+    const headers: RawAxiosRequestHeaders = {...(requestOptions.headers || {})}
+    
+    if(cookies) headers.cookie = cookies
    
     console.log('apiUrl ==>', env.apiUrl)
 
@@ -76,6 +73,7 @@ class ApiClient {
       url: path,
       data: body,
       ...requestOptions,
+      headers,
     });
 
 
@@ -110,45 +108,8 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient({
-  baseUrl: isServer? '' : env.apiUrl,
+  baseUrl: isServer? env.backendApiUrl : env.apiUrl,
 });
 
 export const http = apiClient;
 
-
-function normalizeBackendError(error: AxiosError): BackendError {
-  const response = error.response as AxiosResponse<unknown> | undefined;
-  const details = response?.data;
-  const status = response?.status ?? 0;
-  const message =
-    getErrorMessage(details) ??
-    error.message ??
-    `API request failed with status ${status}`;
-
-  return {
-    status,
-    message,
-    details,
-  };
-}
-
-function getErrorMessage(details: unknown) {
-  if (typeof details === "string" && details.trim()) {
-    return details;
-  }
-
-  if (typeof details === "object" && details !== null) {
-    const maybeMessage = "message" in details ? details.message : undefined;
-    const maybeError = "error" in details ? details.error : undefined;
-
-    if (typeof maybeMessage === "string") {
-      return maybeMessage;
-    }
-
-    if (typeof maybeError === "string") {
-      return maybeError;
-    }
-  }
-
-  return undefined;
-}

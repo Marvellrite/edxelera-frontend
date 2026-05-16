@@ -16,8 +16,8 @@ import { PasswordVisibilityButton } from "./password-visibility-button";
 import {
   FieldLabel,
   type FieldLabelType,
-} from "@/shared/components/ui/field-label";
-import { cn } from "@/shared/utils/utils";
+} from "@/components/ui/field-label";
+import { cn } from "@/lib/utils/utils";
 
 export { inputFieldStates };
 export type { InputFieldState };

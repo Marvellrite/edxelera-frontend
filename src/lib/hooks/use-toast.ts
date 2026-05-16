@@ -9,7 +9,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import { Toaster } from "@/shared/components/ui/toaster";
+import { Toaster } from "@/components/ui/toaster";
 
 export type ToastVariant = "success" | "info" | "error" | "warning";
 

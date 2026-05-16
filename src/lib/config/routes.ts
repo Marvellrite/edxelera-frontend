@@ -28,7 +28,7 @@ const ROUTES = {
 
     authRedirect: '/auth/login',
 
-    unauthorized: '/authorized',
+    unauthorized: '/unauthorized',
 
     onboardingRedirect: '/auth/onboarding',
 

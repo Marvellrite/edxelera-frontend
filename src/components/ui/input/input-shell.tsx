@@ -6,7 +6,7 @@ import {
   type InputFieldState,
   type InputValueState,
 } from "./input.helpers";
-import { cn } from "@/shared/utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 export function InputShell({
   children,

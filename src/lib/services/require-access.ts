@@ -1,9 +1,8 @@
-import { User } from "@/shared/types"
-import { UserRole } from "@/shared/types/auth/user-role"
-import evaluateAccess from "@/shared/utils/auth/evaluate-access"
+import UserRole from "@/lib/types/auth/user-role"
+import evaluateAccess from "@/lib/utils/auth/evaluate-access"
 import { redirect } from 'next/navigation'
-import ROUTES from "@/shared/config/routes"
-import getCurrentUser from "@/shared/api/get-current-user"
+import ROUTES from "@/lib/config/routes"
+import getCurrentUser from "./get-current-user"
 
 type RequireAccessParams = {
     allowedRoles: UserRole[]
@@ -12,6 +11,8 @@ type RequireAccessParams = {
 const requireAccess = async ({allowedRoles}: RequireAccessParams)=>{
 
     const user = await getCurrentUser()
+
+    console.log("user==>", user)
 
     const access = evaluateAccess({userRole:user.role, allowedRoles})
 

@@ -1,4 +1,4 @@
-import { UserRole } from "@/shared/types/auth/user-role"
+import UserRole from "@/lib/types/auth/user-role"
 
 type EvaluateAccessParams = { userRole: UserRole, allowedRoles: UserRole[]}
 

@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
-import { Button } from "@/shared/components/ui/button";
-import { InputField } from "@/shared/components/ui/input";
-import { Link } from "@/shared/components/ui/link";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/ui/input";
+import { Link } from "@/components/ui/link";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import { OtpInput } from "@/features/auth/components/otp-input";
 import {

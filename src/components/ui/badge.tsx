@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from "react";
-import { cn } from "@/shared/utils/utils";
+import { cn } from "@/lib/utils/utils";
 
 export function Badge({ className, ...props }: HTMLAttributes<HTMLSpanElement>) {
   return (

@@ -4,5 +4,5 @@ import React from "react";
 export default async function studentLayout({children}:{children:React.ReactNode}){
     await requireAccess({allowedRoles: ['student']})
 
-    return {children}
+    return children
 }

@@ -20,8 +20,10 @@ function removeItem(key: string, area: StorageArea = "local") {
   getStorage(area)?.removeItem(key);
 }
 
-export const storageService = {
+const storageService = {
   getItem,
   setItem,
   removeItem,
 };
+
+export default storageService

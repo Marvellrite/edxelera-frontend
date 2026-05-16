@@ -1,4 +1,4 @@
-import { routes } from "@/shared/constants/routes";
+import { routes } from "@/lib/constants/routes";
 
 export const navigationConfig = {
   public: [

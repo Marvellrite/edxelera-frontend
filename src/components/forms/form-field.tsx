@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import {
   FieldLabel,
   type FieldLabelType,
-} from "@/shared/components/ui/field-label";
+} from "@/components/ui/field-label";
 
 type FormFieldProps = {
   label: string;
