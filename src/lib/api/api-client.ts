@@ -5,7 +5,6 @@ import axios, {
   type AxiosResponse,
   type RawAxiosRequestHeaders,
 } from "axios";
-import { tokenService } from "@/shared/services/token.service";
 import env from "@/shared/constants/env";
 
 type ApiClientOptions = {
@@ -25,6 +24,8 @@ export type BackendError = {
   message: string;
   details?: unknown;
 };
+
+const isServer = typeof window === "undefined"
 
 export class HttpError extends Error {
   readonly status: number;
@@ -52,15 +53,11 @@ class ApiClient {
       withCredentials: true,
     });
 
+
     this.client.interceptors.request.use((config) => {
-      const authHeader = getAuthHeader();
-
-      if (authHeader.Authorization) {
-        config.headers.Authorization = authHeader.Authorization;
-      }
-
-      return config;
-    });
+  console.log("🔥 Axios request interceptor:", config.method, config.url);
+  return config;
+});
 
     this.client.interceptors.response.use(
       (response) => response,
@@ -72,11 +69,15 @@ class ApiClient {
 
   async request<TResponse>(path: string, options: RequestOptions = {}) {
     const { body, ...requestOptions } = options;
+   
+    console.log('apiUrl ==>', env.apiUrl)
+
     const response = await this.client.request<TResponse>({
       url: path,
       data: body,
       ...requestOptions,
     });
+
 
     if (response.status === 204) {
       return undefined as TResponse;
@@ -86,10 +87,12 @@ class ApiClient {
   }
 
   get<TResponse>(path: string, options?: RequestOptions) {
+    console.log("GET Method Called", path)
     return this.request<TResponse>(path, { ...options, method: "GET" });
   }
-
+  
   post<TResponse>(path: string, body: unknown, options?: RequestOptions) {
+    console.log("POST Method called", path)
     return this.request<TResponse>(path, { ...options, method: "POST", body });
   }
 
@@ -107,16 +110,11 @@ class ApiClient {
 }
 
 export const apiClient = new ApiClient({
-  baseUrl: env.apiUrl,
+  baseUrl: isServer? '' : env.apiUrl,
 });
 
 export const http = apiClient;
 
-function getAuthHeader() {
-  const accessToken = tokenService.getAccessToken();
-
-  return accessToken ? { Authorization: `Bearer ${accessToken}` } : {};
-}
 
 function normalizeBackendError(error: AxiosError): BackendError {
   const response = error.response as AxiosResponse<unknown> | undefined;

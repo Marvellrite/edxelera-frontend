@@ -1,5 +1,5 @@
 import { apiEndpoints } from "@/shared/constants/api-endpoints";
-import { http } from "@/shared/services/api-client";
+import { http } from "@/shared/api/api-client";
 import type { ApiResponse } from "@/shared/types/api";
 import type {
   CourseDto,

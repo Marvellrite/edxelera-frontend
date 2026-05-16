@@ -1,4 +1,4 @@
-import type { AuthRole } from "@/shared/types/auth-role";
+import type { AuthRole } from "@/shared/types/auth/user-role";
 
 export const protectedRouteRoles: Record<string, AuthRole> = {
   "/home": "student",

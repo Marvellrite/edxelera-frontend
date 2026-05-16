@@ -1,14 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/shared/components/ui/button";
-import { Checkbox } from "@/shared/components/ui/checkbox";
-import { InputField } from "@/shared/components/ui/input";
-import { Link } from "@/shared/components/ui/link";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { InputField } from "@/components/ui/input";
+import { Link } from "@/components/ui/link";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
@@ -16,8 +14,7 @@ import {
   type LoginFormValues,
 } from "@/features/auth/schemas/login-schema";
 import { useLoginMutation } from "@/features/auth/mutations/auth.mutations";
-import { getAccessTokenFromResponse } from "@/features/auth/services/auth.service";
-import { setAccessTokenCookie } from "@/shared/services/token.service";
+import SocialButton from "@/components/composites/social-button";
 
 const initialValues: LoginFormValues = {
   email: "",
@@ -26,9 +23,7 @@ const initialValues: LoginFormValues = {
 };
 
 export function LoginScreen() {
-  const router = useRouter();
-  const loginMutation = useLoginMutation();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { mutateAsync:signIn, isError, error, isPending,  } = useLoginMutation();
   const {
     formState: { errors },
     handleSubmit,
@@ -39,25 +34,10 @@ export function LoginScreen() {
   });
 
   async function submitLogin(values: LoginFormValues) {
-    try {
-      setErrorMessage(null);
-      const response = await loginMutation.mutateAsync({
+       await signIn({
         email: values.email,
         password: values.password,
       });
-      const accessToken = getAccessTokenFromResponse(response);
-
-      if (accessToken) {
-        setAccessTokenCookie(accessToken);
-      }
-
-      router.replace("/home");
-      router.refresh();
-    } catch {
-      setErrorMessage(
-        "Unable to log in. Please check your details and try again.",
-      );
-    }
   }
 
   return (
@@ -123,15 +103,15 @@ export function LoginScreen() {
                   </Link>
                 </div>
 
-                <Button type="submit" fullWidth isLoading={loginMutation.isPending}>
+                <Button type="submit" fullWidth isLoading={isPending}>
                   Login
                 </Button>
               </div>
             </div>
 
-            {errorMessage ? (
+            {isError ? (
               <p className="text-center text-sm leading-5 text-destructive">
-                {errorMessage}
+                {error.message}
               </p>
             ) : null}
 
@@ -175,22 +155,4 @@ export function LoginScreen() {
 
 function AuthFieldIcon({ src }: { src: string }) {
   return <Image src={src} alt="" width={24} height={24} aria-hidden="true" />;
-}
-
-type SocialButtonProps = {
-  iconSrc: string;
-  label: string;
-};
-
-function SocialButton({ iconSrc, label }: SocialButtonProps) {
-  return (
-    <Button
-      type="button"
-      variant="social"
-      size="icon"
-      aria-label={label}
-    >
-      <Image src={iconSrc} alt="" width={24} height={24} aria-hidden="true" />
-    </Button>
-  );
 }

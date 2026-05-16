@@ -1,4 +1,4 @@
-import { http } from "@/shared/services/api-client";
+import { http } from "@/shared/api/api-client";
 import { apiEndpoints } from "@/shared/constants/api-endpoints";
 import type {
   AuthApiResponseDto,

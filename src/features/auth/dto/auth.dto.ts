@@ -14,7 +14,6 @@ export type LoginRequestDto = {
 export type VerifyEmailRequestDto = {
   email: string;
   otp: string;
-  otp_type: "account_verification";
 };
 
 export type OnboardingProfileRequestDto = {

@@ -11,10 +11,9 @@ import {
   type VerifyEmailFormValues,
 } from "@/features/auth/schemas/verify-email-schema";
 import { useVerifyEmailMutation } from "@/features/auth/mutations/auth.mutations";
-import { getAccessTokenFromResponse } from "@/features/auth/services/auth.service";
-import { setAccessTokenCookie } from "@/shared/services/token.service";
 import { storageService } from "@/shared/services/storage.service";
 import { AuthLogo } from "./auth-logo";
+import ROUTES from "@/shared/config/routes";
 
 const initialValues: VerifyEmailFormValues = {
   code: "",
@@ -55,19 +54,13 @@ export function VerifyEmailScreen() {
 
     try {
       setErrorMessage(null);
-      const response = await verifyEmailMutation.mutateAsync({
+      await verifyEmailMutation.mutateAsync({
         email,
         otp: values.code,
-        otp_type: "account_verification",
       });
-      const accessToken = getAccessTokenFromResponse(response);
-
-      if (accessToken) {
-        setAccessTokenCookie(accessToken);
-      }
 
       storageService.removeItem("pending_verification_email", "session");
-      router.push("/auth/onboarding");
+      router.push(ROUTES.onboardingRedirect);
     } catch {
       setErrorMessage("Unable to verify this code. Please try again.");
     }
