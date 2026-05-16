@@ -1,4 +1,4 @@
-import type { Course } from "@/shared/types/course";
+import type { Course } from "@/lib/types/course";
 
 type CourseCardProps = {
   course: Course;

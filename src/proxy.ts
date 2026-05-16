@@ -1,18 +1,27 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { ACCESS_TOKEN_COOKIE } from "@/shared/services/token.service";
+import { isProtected, isPublic } from "./lib/utils/routes/route-guards";
+import { ACCESS_TOKEN_COOKIE } from "./lib/config/auth";
 
-export function proxy(request: NextRequest) {
-  const accessToken = request.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
-  console.log('accessToken =>', accessToken)
+export function proxy(req: NextRequest) {
+  const accessToken = req.cookies.get(ACCESS_TOKEN_COOKIE)?.value;
+  const pathname = req.nextUrl.pathname
 
-  if (!accessToken) {
-    return NextResponse.redirect(new URL("/auth", request.url));
+
+  if(isPublic(pathname)){
+    return NextResponse.next()
+  }
+
+  if ( isProtected(pathname) && !accessToken) {
+    return NextResponse.redirect(new URL("/auth", req.url));
   }
 
   return NextResponse.next();
 }
 
+// const protectedPrefixes = ROUTES.protectedPrefixes.map((route)=>`${route}/:path*`)
+
 export const config = {
-  matcher: ["/home/:path*"],
+  // matcher: ["/home/:path*"],
+  matcher: ['/home/:path*', '/instructor/:path*', '/admin/:path*'],
 };

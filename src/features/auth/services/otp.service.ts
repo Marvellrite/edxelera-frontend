@@ -1,5 +1,5 @@
-import { http } from "@/shared/services/api-client";
-import { apiEndpoints } from "@/shared/constants/api-endpoints";
+import { http } from "@/lib/api/client";
+import { apiEndpoints } from "@/lib/constants/api-endpoints";
 import type {
   AuthApiResponseDto,
   ResetForgottenPasswordRequestDto,

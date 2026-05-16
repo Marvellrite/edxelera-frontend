@@ -1,6 +1,6 @@
-import { apiEndpoints } from "@/shared/constants/api-endpoints";
-import { http } from "@/shared/services/api-client";
-import type { ApiResponse } from "@/shared/types/api";
+import { apiEndpoints } from "@/lib/constants/api-endpoints";
+import { http } from "@/lib/api/client";
+import type { ApiResponse } from "@/lib/types/api";
 import type {
   CourseDto,
   CreateCourseDto,

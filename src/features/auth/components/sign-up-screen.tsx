@@ -5,9 +5,9 @@ import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Button } from "@/shared/components/ui/button";
-import { InputField } from "@/shared/components/ui/input";
-import { Link } from "@/shared/components/ui/link";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/ui/input";
+import { Link } from "@/components/ui/link";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {
@@ -15,7 +15,8 @@ import {
   type SignUpFormValues,
 } from "@/features/auth/schemas/sign-up-schema";
 import { useSignUpMutation } from "@/features/auth/mutations/auth.mutations";
-import { storageService } from "@/shared/services/storage.service";
+import { storageService } from "@/lib/services/storage.service";
+import ROUTES from "@/lib/config/routes";
 
 const initialValues: SignUpFormValues = {
   fullName: "",
@@ -47,7 +48,7 @@ export function SignUpScreen() {
       });
       storageService.setItem("pending_verification_email", values.email, "session");
       router.push(
-        `/auth/verify-email`,
+        ROUTES.auth.verifyEmail,
       );
     } catch {
       setErrorMessage("Unable to create your account. Please try again.");

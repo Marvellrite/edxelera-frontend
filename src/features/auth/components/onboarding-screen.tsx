@@ -5,8 +5,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRef, useState } from "react";
 import type { ChangeEvent, ReactNode } from "react";
 import { useForm, type UseFormRegisterReturn } from "react-hook-form";
-import { Button } from "@/shared/components/ui/button";
-import { InputField } from "@/shared/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { InputField } from "@/components/ui/input";
 import { AuthBackgroundPanels } from "@/features/auth/components/auth-background-panels";
 import { AuthLogo } from "@/features/auth/components/auth-logo";
 import {

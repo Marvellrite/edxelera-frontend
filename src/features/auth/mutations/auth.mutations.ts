@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 import { useMutation } from "@tanstack/react-query";
 import { authService } from "@/features/auth/services/auth.service";
 import { otpService } from "@/features/auth/services/otp.service";
+import ROUTES from "@/lib/config/routes";
 
 export function useSignUpMutation() {
   return useMutation({
@@ -11,8 +14,14 @@ export function useSignUpMutation() {
 }
 
 export function useLoginMutation() {
+  const router = useRouter()
+
   return useMutation({
     mutationFn: authService.login,
+    onSuccess: ()=>{
+            router.replace(ROUTES.roleHome.student);
+            router.refresh();
+    }
   });
 }
 
